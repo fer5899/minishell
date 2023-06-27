@@ -30,4 +30,18 @@ typedef struct s_master
 
 //Main
 
+//Split two
+char	    **ft_split_two(char const *s, char c);
+
+//Env variables minishell
+t_master	*inicialize_struct(void);
+char	    *get_env_variable(char *key, t_master *master);
+void	    print_env_list(t_master *master);
+
+//Free minishell
+void	    ft_free_env(void *env);
+void	    ft_free_env_list(t_master *master);
+void	    ft_free_data(void *data);
+void	    ft_free_data_list(t_master *master);
+
 #endif

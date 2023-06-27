@@ -10,7 +10,10 @@ LIBFT = ./Libft/libft.a
 #SOURCES
 #SRC_DIR = minishell/sources
 #SRC = $(wildcard $(SRC_DIR)/*.c)
-SRC = minishell.c
+SRC = minishell.c \
+	ft_split_two.c \
+	env_variables_minishell.c \
+	free_minishell.c
 
 # OBJECTS
 #OBJ_DIR = minishell/objects
@@ -27,6 +30,7 @@ ${NAME}:	${MINISHELL} ${OBJ} ${LIBFT} #$(OBJ_DIR)
 
 ${LIBFT}:
 		@${MAKE} -C libft all
+		@${MAKE} -C libft bonus
 
 ${MINISHELL}:
 		${CC} ${FLAGS} -c ${SRC}
