@@ -1,0 +1,46 @@
+# Compiled Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Dependency files
+*.d
+
+# macOS specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode files
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+
+# Xcode workspace files
+*.xcworkspace
+*.xcworkspacedata
+*.xcproj/
+!*.xcworkspace/contents.xcworkspacedata
