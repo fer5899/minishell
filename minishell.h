@@ -30,8 +30,8 @@ typedef struct s_master
 
 //Main
 
-//Split two
-char	    **ft_split_two(char const *s, char c);
+//Split env
+char	    **ft_split_env(char const *s, char c);
 
 //Env variables minishell
 t_master	*inicialize_struct(void);
@@ -43,5 +43,7 @@ void	    ft_free_env(void *env);
 void	    ft_free_env_list(t_master *master);
 void	    ft_free_data(void *data);
 void	    ft_free_data_list(t_master *master);
+
+//Split parser 1 - the first parser for single and double quotes
 
 #endif

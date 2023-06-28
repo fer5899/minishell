@@ -11,7 +11,7 @@ LIBFT = ./Libft/libft.a
 #SRC_DIR = minishell/sources
 #SRC = $(wildcard $(SRC_DIR)/*.c)
 SRC = minishell.c \
-	ft_split_two.c \
+	ft_split_env.c \
 	env_variables_minishell.c \
 	free_minishell.c
 

@@ -1,8 +1,5 @@
 
-//#include "minishell.h"
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
+#include "minishell.h"
 
 static char	*fill_array(char *s, char c)
 {
@@ -61,7 +58,7 @@ char	**ft_free_split(char **str, int i)
 	return (0);
 }
 
-char	**ft_split_two(char const *s, char c)
+char	**ft_split_env(char const *s, char c)
 {
 	char	**str;
 	int		i;

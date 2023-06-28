@@ -78,13 +78,64 @@ t_list	*inicialize_data(char **split)
 	return (list);
 }
 
-void	ft_parse_input(char *command, t_master *master)
+int	single_quotes_error(char *command)
+{
+	int	flag_singel;
+
+	flag_singel = 0;
+	while (*command)
+	{
+		if (*command == '\'')
+		{
+			if (flag_singel == 1)
+				flag_singel = 0;
+			else
+				flag_singel = 1;
+		}
+		command++;
+	}
+	if (flag_singel == 1)
+	{
+		printf("%s\n", "Quote error");
+		return (1);
+	}
+	return (0);
+}
+
+int	double_quotes_error(char *command)
+{
+	int	flag_double;
+
+	flag_double = 0;
+	while (*command)
+	{
+		if (*command == '\"')
+		{
+			if (flag_double == 1)
+				flag_double = 0;
+			else
+				flag_double = 1;
+		}
+		command++;
+	}
+	if (flag_double == 1)
+	{
+		printf("%s\n", "Quote error");
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_parse_input(char *command, t_master *master)
 {
 	char	**split;
 
+	//if (single_quotes_error(command) == 1 || double_quotes_error(command) == 1)
+	//	return (1);
 	split = ft_split(command, ' ');
 	master->parsed_lst = inicialize_data(split);
 	free(split);
+	return (0);
 }
 
 int	main(void)
@@ -98,11 +149,6 @@ int	main(void)
 	{
 		printf("%s", get_env_variable("USER", master));
 		command = readline("$ ");
-		if (command == NULL)
-		{
-			printf("\n");
-			break ;
-		}
 		if (ft_strlen(command) == 4 && ft_strncmp(command, "exit", 4) == 0)
 		{
 			free(command);
@@ -110,10 +156,12 @@ int	main(void)
 		}
 		else
 		{
-			ft_parse_input(command, master);
-			print_parsed_list(master);
-			ft_free_data_list(master);
-			free(command);
+			if (ft_parse_input(command, master) == 0)
+			{
+				print_parsed_list(master);
+				ft_free_data_list(master);
+				free(command);
+			}
 		}
 	}
 	ft_free_env_list(master);

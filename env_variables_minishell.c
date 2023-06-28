@@ -14,7 +14,7 @@ t_list	*inicialize_env(void)
 	while (*environ != NULL)
 	{
 		env = ft_calloc(1, sizeof(t_env));
-		split = ft_split_two(*environ, '=');
+		split = ft_split_env(*environ, '=');
 		env->key = split[0];
 		env->value = split[1];
 		free(split);
@@ -36,27 +36,27 @@ t_master	*inicialize_struct(void)
 
 char	*get_env_variable(char *key, t_master *master)
 {
-	t_list *current;
-	t_env *env;
-	
+	t_list	*current;
+	t_env	*env;
+
 	current = master->env_lst;
 	while (current)
 	{
 		env = (t_env *)current->content;
 		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
 		{
-			return env->value;
+			return (env->value);
 		}
 		current = current->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
 void	print_env_list(t_master *master)
 {
 	t_list	*current;
 	t_env	*env;
-	
+
 	current = master->env_lst;
 	while (current)
 	{
