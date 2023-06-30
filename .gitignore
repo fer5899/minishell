@@ -44,3 +44,6 @@ xcuserdata/
 *.xcworkspacedata
 *.xcproj/
 !*.xcworkspace/contents.xcworkspacedata
+
+# Test files
+testing
