@@ -9,6 +9,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# define STD_IN_OUT 1000
+# define MAX_PIPES (STD_IN_OUT + 1)
+
 typedef struct s_env
 {
 	char	*key;
@@ -25,7 +28,8 @@ typedef struct s_master
 {
 	t_list	*env_lst;
 	t_list	*parsed_lst;
-	
+	int		fds[MAX_PIPES][2];
+	pid_t	pids[MAX_PIPES];
 }				t_master;
 
 enum e_prs_type
@@ -37,7 +41,13 @@ enum e_prs_type
 	heredoc_q,
 	out_red,
 	out_red_app,
-	pipe
+	pipe_
+};
+
+enum e_pipe_ends
+{
+	rd,
+	wr
 };
 
 //Main
