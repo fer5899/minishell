@@ -25,8 +25,20 @@ typedef struct s_master
 {
 	t_list	*env_lst;
 	t_list	*parsed_lst;
-
+	
 }				t_master;
+
+enum e_prs_type
+{
+	prog_name,
+	prog_arg,
+	in_redir,
+	heredoc,
+	heredoc_q,
+	out_red,
+	out_red_app,
+	pipe
+};
 
 //Main
 
