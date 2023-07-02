@@ -1,6 +1,9 @@
 #include "../minishell.h"
 
-void	fatal_error(void);
+void	fatal_error(void)
+{
+	return ;
+}
 
 void	init_pipes(t_master *data)
 {
@@ -61,7 +64,7 @@ void	executor(t_master *data)
 		while (lst != NULL)
 		{
 			lst = lst->next;
-			if (((t_data *) lst)->type == pipe)
+			if (((t_data *) lst)->type == pipe_)
 			{
 				lst = lst->next;
 				break ;

@@ -10,7 +10,7 @@
 # include <readline/history.h>
 
 # define STD_IN_OUT 1000
-# define MAX_PIPES (STD_IN_OUT + 1)
+# define MAX_PIPES 1001
 
 typedef struct s_env
 {
