@@ -17,6 +17,8 @@
 *.exe
 *.out
 *.app
+minishell
+test
 
 # Precompiled Headers
 *.gch
