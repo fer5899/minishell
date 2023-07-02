@@ -52,4 +52,11 @@ enum e_pipe_ends
 
 //Main
 
+void	fatal_error(void);
+void	init_pipes(t_master *data);
+void	executor(t_master *data);
+
+// TESTING
+void	print_lst(void *nd);
+
 #endif

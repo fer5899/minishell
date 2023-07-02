@@ -2,7 +2,23 @@
 
 void	fatal_error(void)
 {
-	return ;
+	ft_printf_fd("FATAL ERROR\n", 2);
+	exit(1);
+}
+
+void	find_next_cmd(t_list **lst)
+{
+	while (*lst != NULL)
+	{
+		*lst = (*lst)->next;
+		if (!*lst)
+			break ;
+		if (((t_data *)(*lst)->content)->type == pipe_)
+		{
+			*lst = (*lst)->next;
+			break ;
+		}
+	}
 }
 
 void	init_pipes(t_master *data)
@@ -16,7 +32,7 @@ void	init_pipes(t_master *data)
 	lst = data->parsed_lst;
 	while (lst != NULL)
 	{
-		if (((t_data *) lst)->type == pipe_)
+		if (((t_data *) lst->content)->type == pipe_)
 			n_pipes++;
 		lst = lst->next;
 	}
@@ -38,16 +54,16 @@ void	executor(t_master *data)
 	lst = data->parsed_lst;
 	cmd_idx = -1;
 	init_pipes(data);
-	// Iterate the parsed list
 	while (lst != NULL)
 	{
 		cmd_idx++;
-		// Launch the process with list at the beginning of the command to execute
 		data->pids[cmd_idx] = fork();
 		if (data->pids[cmd_idx] == -1)
-			fatal_error(); // if a fork fails stop minishell HOW?
+			fatal_error();
 		if (data->pids[cmd_idx] == 0)
 		{
+			ft_lstiter(lst, print_lst);
+			ft_printf("\n");
 			// Apply redirections
 			// Execute command
 
@@ -59,17 +75,9 @@ void	executor(t_master *data)
 			// 			cmd_parser(margs->argv[cmd_idx + 1], NULL, 0));
 			// execve(get_cmd_path(cmd_arr[0], margs->env), cmd_arr, margs->env);
 			// perror("pipex");
-			// exit(1);
+			exit(0);
 		}
-		while (lst != NULL)
-		{
-			lst = lst->next;
-			if (((t_data *) lst)->type == pipe_)
-			{
-				lst = lst->next;
-				break ;
-			}
-		}
+		find_next_cmd(&lst);
 	}
 }
 
