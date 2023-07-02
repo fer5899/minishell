@@ -6,11 +6,13 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define STD_IN_OUT 1000
-# define MAX_PIPES 1001
+# define MAX_PIPES 1000
+# define STD_IN_OUT MAX_PIPES
+# define TEMP_PATH "heredoc.tmp"
 
 typedef struct s_env
 {
@@ -28,8 +30,8 @@ typedef struct s_master
 {
 	t_list	*env_lst;
 	t_list	*parsed_lst;
-	int		fds[MAX_PIPES][2];
-	pid_t	pids[MAX_PIPES];
+	int		fds[MAX_PIPES + 1][2];
+	pid_t	pids[MAX_PIPES + 1];
 }				t_master;
 
 enum e_prs_type
