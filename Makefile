@@ -1,52 +1,48 @@
 
-NAME = minishell
-MINISHELL = minishell.a
-LIBFT = ./Libft/libft.a
+CC=gcc
+CFLAGS=-Wall -Wextra -Werror
+CPPFLAGS= -ILibft -I.
+NAME=minishell
 
-#INCLUDES
-#INCL_DIR = minishell/includes
-#INCL = $(wildcard $(INCL_DIR)/*.h)
+SRC_DIR = sources
+MAIN = $(SRC_DIR)/minishell.c
+SRC = $(SRC_DIR)/executor.c
 
-#SOURCES
-#SRC_DIR = minishell/sources
-#SRC = $(wildcard $(SRC_DIR)/*.c)
-SRC = minishell.c
+TEST_DIR = testing
+TEST_MAIN = $(TEST_DIR)/executor_test.c
+TEST_SRC =
 
-# OBJECTS
-#OBJ_DIR = minishell/objects
-#OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+OBJ=$(SRC:.c=.o)
+OBJ_TEST=$(TEST_SRC:.c=.o)
 
-CC = gcc
-FLAGS = -Wall -Wextra -Werror
-OBJ = ${SRC:.c=.o}
+LIBFT_DIR=Libft
+LIBFT=$(LIBFT_DIR)/libft.a
 
-all:	${NAME}
-		 
-${NAME}:	${MINISHELL} ${OBJ} ${LIBFT} #$(OBJ_DIR) 
-		${CC} ${FLAGS} ${OBJ} ${LIBFT} ${MINISHELL} -lreadline -o ${NAME}
 
-${LIBFT}:
-		@${MAKE} -C libft all
+all: $(NAME)
 
-${MINISHELL}:
-		${CC} ${FLAGS} -c ${SRC}
-		ar rc ${MINISHELL} ${OBJ}
+$(NAME): $(LIBFT) $(OBJ) $(MAIN)
+	$(CC) $(CPPFLAGS) $(OBJ) $(MAIN) $(LIBFT) -lreadline -o $(NAME)
 
-#$(OBJ_DIR):
-#		@mkdir -p $(OBJ_DIR)
+%.o: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ 
+
+test: build_test
+	@./test
+
+build_test: $(LIBFT) $(OBJ) $(TEST_MAIN)
+	@$(CC) $(CPPFLAGS) $(OBJ) $(TEST_MAIN) $(LIBFT) -lreadline -o test
+
+$(LIBFT):
+	@$(MAKE) -C Libft
+
+clean:
+	rm -f $(OBJ)
+	$(MAKE) -C Libft fclean
 	
-#$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCL)
-#	$(CC) $(CFLAGS) -I$(INCL_DIR) -c $< -o $@
-
-clean:	
-		@rm -f ${OBJ}
-		@${MAKE} -C libft clean
-
-fclean:	clean
-		@rm -f ${NAME} ${MINISHELL}
-		@rm -rf $(OBJ_DIR)
-		@${MAKE} -C libft fclean
+fclean: clean
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re lib main
