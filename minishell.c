@@ -80,21 +80,21 @@ t_list	*inicialize_data(char **split)
 
 int	single_quotes_error(char *command)
 {
-	int	flag_singel;
+	int	flag_single;
 
-	flag_singel = 0;
+	flag_single = 0;
 	while (*command)
 	{
 		if (*command == '\'')
 		{
-			if (flag_singel == 1)
-				flag_singel = 0;
+			if (flag_single == 1)
+				flag_single = 0;
 			else
-				flag_singel = 1;
+				flag_single = 1;
 		}
 		command++;
 	}
-	if (flag_singel == 1)
+	if (flag_single == 1)
 	{
 		printf("%s\n", "Quote error");
 		return (1);

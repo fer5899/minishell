@@ -29,8 +29,8 @@ ${NAME}:	${MINISHELL} ${OBJ} ${LIBFT} #$(OBJ_DIR)
 		${CC} ${FLAGS} ${OBJ} ${LIBFT} ${MINISHELL} -lreadline -o ${NAME}
 
 ${LIBFT}:
-		@${MAKE} -C libft all
-		@${MAKE} -C libft bonus
+		@${MAKE} -C Libft all
+#		@${MAKE} -C Libft bonus
 
 ${MINISHELL}:
 		${CC} ${FLAGS} -c ${SRC}
@@ -44,12 +44,12 @@ ${MINISHELL}:
 
 clean:	
 		@rm -f ${OBJ}
-		@${MAKE} -C libft clean
+		@${MAKE} -C Libft clean
 
 fclean:	clean
 		@rm -f ${NAME} ${MINISHELL}
 		@rm -rf $(OBJ_DIR)
-		@${MAKE} -C libft fclean
+		@${MAKE} -C Libft fclean
 
 re: fclean all
 

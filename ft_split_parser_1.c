@@ -8,13 +8,13 @@ static int	word_count(char *str)
 	int		inside_quotes;
 	int		is_word;
 	char	quote_type;
-	char	prev_char;
+	//char	prev_char;
 
 	count = 0;
 	inside_quotes = 0;
 	is_word = 0;
 	quote_type = '\0';
-	prev_char = '\0';
+	//prev_char = '\0';
 	while (*str)
 	{
 		if ((*str == '"' || *str == '\'') && !inside_quotes)
@@ -38,12 +38,14 @@ static int	word_count(char *str)
 				is_word = 1;
 			}
 		}
-		prev_char = *str;
+		//prev_char = *str;
 		str++;
 	}
 	//printf("c:%d - iq:%d - iw:%d - qt:%c \n", count, inside_quotes, is_word, quote_type);
-	if (inside_quotes == 1 && prev_char != quote_type)
-		count++;
+	//if (inside_quotes == 1 && prev_char != quote_type)
+	//	count ++;
+	if (inside_quotes == 1)
+		printf("%s\n", "Quote error");
 	return (count);
 }
 
@@ -72,55 +74,56 @@ static char	*fill_array(char *s, char c)
 char	**ft_split_parser_1(char *s)
 {
 	char	**str;
-    //int     count;
-    //char	char_type;
+    int     count;
+    char	char_type;
+	char 	**result;
 
-	printf("%d\n", word_count(s));
-    //count = word_count(s);
-    //char_type = '\0';
-	//str = (char **)malloc((count + 1) * sizeof(char *));
-	//if (!str)
-	//	return (0);
-	//while (count > 0)
-	//{
-	//	if (*s == ' ' && *s)
-	//		s++;
-	//	else if (*s != ' ' && *s)
-	//	{
-	//		if (*s != '\'' || *s != '"')
-    //            char_type = *s;
-    //        else
-    //            char_type = ' ';
-    //        *str = fill_array(s, char_type);
-	//		str++;
-    //        count--;
-    //        s++;
-    //        while (*s != char_type && *s)
-	//		    s++;
-	//	}
-	//}
-    //str++;
-	//str = 0;
-	return (str);
+    count = word_count(s);
+	//printf("%d\n", count);
+    char_type = '\0';
+	str = (char **)malloc((count + 1) * sizeof(char *));
+	if (!str)
+		return (0);
+	result = str;
+	while (count > 0)
+	{
+		while (*s == ' ' && *s)
+			s++;
+		if (*s == '\'' || *s == '"')
+		{
+            char_type = *s;
+			s++;
+		}
+        else
+            char_type = ' ';
+        *str = fill_array(s, char_type);
+		str++;
+        count--;
+        while (*s != char_type && *s)
+		    s++;
+		s++;
+	}
+	*str = 0;
+	return (result);
 }
 
-int main(void)
-{
-	char **str;
-	int i;
-	
-	i = 0;
-	str = ft_split_parser_1("hola que tal");
-	//while (str[i])
-	//{
-	//	printf("%s\n", str[i]);
-	//	i++;
-	//}
-
-	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
-	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
-	//"ho 'la que '''\"\"'" - 5
-	//"ho 'la que '''\"''''''\"''" - 5
-
-    //hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe
-}
+//int main(void)
+//{
+//	char **str;
+//	int i;
+//	
+//	i = 0;
+//	str = ft_split_parser_1("hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe");
+//	while (str[i])
+//	{
+//		printf("%s\n", str[i]);
+//		i++;
+//	}
+//
+//	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
+//	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
+//	//"ho 'la que '''\"\"'" - 4 Quote Error
+//	//"ho 'la que '''\"''''''\"''" - 5
+//
+//    //hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe
+//}
