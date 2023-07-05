@@ -37,13 +37,13 @@ typedef struct s_master
 
 enum e_prs_type
 {
-	prog_name,
-	prog_arg,
-	in_redir,
+	prog_name_,
+	prog_arg_,
+	in_redir_,
 	heredoc_,
-	heredoc_q,
-	out_red,
-	out_red_app,
+	heredoc_q_,
+	out_red_,
+	out_red_app_,
 	pipe_
 };
 
@@ -66,6 +66,7 @@ void	set_pipe_redirection(t_master *data, int cmd_idx);
 char	*expand_env_vars(char *str, t_master *data); // sustituir por función de álvaro
 void	find_next_cmd(t_list **lst);
 void	init_pipes(t_master *data);
+char	**get_prog_args(t_list *lst);
 
 // TESTING
 void	print_lst(void *nd);

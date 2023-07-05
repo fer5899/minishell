@@ -19,7 +19,7 @@ void	set_redirection(int type, char *str, t_master *data)
 {
 	int	fd;
 
-	if (type == in_redir)
+	if (type == in_redir_)
 	{
 		if (access(str, F_OK | R_OK) == -1)
 			redirection_error(str);
@@ -27,14 +27,14 @@ void	set_redirection(int type, char *str, t_master *data)
 		dup2(fd, 0);
 		close(fd);
 	}
-	else if (type == heredoc_ || type == heredoc_q)
+	else if (type == heredoc_ || type == heredoc_q_)
 		heredoc(str, type, data);
-	else if (type == out_red || type == out_red_app)
+	else if (type == out_red_ || type == out_red_app_)
 	{
 		if (access(str, F_OK) == 0)
 			if (access(str, W_OK) == -1)
 				redirection_error(str);
-		if (type == out_red)
+		if (type == out_red_)
 			fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
 			fd = open(str, O_WRONLY | O_CREAT, 0644);
@@ -92,7 +92,7 @@ void	set_all_redirections(t_master *data, t_list *lst)
 		content = ((t_data *)lst->content);
 		if (content->type == pipe_)
 			break ;
-		else if (content->type > prog_arg)
+		else if (content->type > prog_arg_)
 			set_redirection(content->type, content->str, data);
 		lst = lst->next;
 	}

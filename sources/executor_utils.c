@@ -38,3 +38,38 @@ void	init_pipes(t_master *data)
 		i++;
 	}
 }
+
+int	count_args(t_list *lst)
+{
+	int		nargs;
+
+	nargs = 1;
+	while (lst != NULL)
+	{
+		if (((t_data *) lst->content)->type == pipe_)
+			break ;
+		if (((t_data *) lst->content)->type == prog_arg_)
+			nargs++;
+		lst = lst->next;
+	}
+}
+
+char	**get_prog_args(t_list *lst)
+{
+	char	**args;
+	int		nargs;
+	int		i;
+
+	nargs = count_args(lst);
+	args = (char **) ft_calloc(nargs + 1, sizeof(char *));
+	i = 0;
+	while (i < nargs)
+	{
+		if (((t_data *) lst->content)->type == prog_arg_)
+			args[i] = ((t_data *) lst->content)->str;
+		lst = lst->next;
+		i++;
+	}
+	args[i] = NULL;
+	return (args);
+}
