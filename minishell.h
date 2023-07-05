@@ -56,6 +56,7 @@ enum e_pipe_ends
 //Main
 
 void	fatal_error(void);
+void	redirection_error(char *str);
 void	init_pipes(t_master *data);
 void	executor(t_master *data);
 void	heredoc(char *delim, int type, t_master *data);

@@ -1,11 +1,5 @@
 #include "../minishell.h"
 
-void	fatal_error(void)
-{
-	ft_printf_fd("FATAL ERROR\n", 2);
-	exit(1);
-}
-
 void	find_next_cmd(t_list **lst)
 {
 	while (*lst != NULL)
