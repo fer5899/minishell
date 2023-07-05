@@ -7,7 +7,22 @@ void	redirection_error(char *str)
 	exit(1);
 }
 
-void	redirection(int type, char *str, t_master *data)
+void	close_fds(t_master *data)
+{
+	int	idx;
+
+	idx = 0;
+	while (idx < data->n_pipes)
+	{
+		if (data->fds[idx][rd] > 0)
+			close(data->fds[idx][rd]);
+		if (data->fds[idx][wr] > 0)
+			close(data->fds[idx][wr]);
+		idx++;
+	}
+}
+
+void	set_redirection(int type, char *str, t_master *data)
 {
 	int	fd;
 
@@ -62,4 +77,15 @@ void	heredoc(char *delim, int type, t_master *data)
 	unlink(TEMP_PATH);
 	dup2(tmp_fd, 0);
 	close(tmp_fd);
+}
+
+void	set_pipe_redirection(t_master *data, int cmd_idx)
+{
+	if (data->n_pipes <= 0)
+		return ;
+	if (cmd_idx >= 0 && cmd_idx < data->n_pipes)
+		dup2(data->fds[cmd_idx][wr], 1);
+	if (cmd_idx > 0 && cmd_idx <= data->n_pipes)
+		dup2(data->fds[cmd_idx - 1][rd], 0);
+	close_fds(data);
 }
