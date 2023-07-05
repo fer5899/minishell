@@ -32,6 +32,7 @@ typedef struct s_master
 	t_list	*parsed_lst;
 	int		fds[MAX_PIPES + 1][2];
 	pid_t	pids[MAX_PIPES + 1];
+	int		n_pipes;
 }				t_master;
 
 enum e_prs_type

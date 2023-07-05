@@ -25,20 +25,19 @@ void	init_pipes(t_master *data)
 {
 	t_list	*lst;
 	int		i;
-	int		n_pipes;
 
 	i = 0;
-	n_pipes = 0;
+	data->n_pipes = 0;
 	lst = data->parsed_lst;
 	while (lst != NULL)
 	{
 		if (((t_data *) lst->content)->type == pipe_)
-			n_pipes++;
+			data->n_pipes++;
 		lst = lst->next;
 	}
-	if (n_pipes > MAX_PIPES)
+	if (data->n_pipes > MAX_PIPES)
 		fatal_error();
-	while (i < n_pipes)
+	while (i < data->n_pipes)
 	{
 		if (pipe(data->fds[i]) == -1)
 			fatal_error();
