@@ -82,3 +82,18 @@ void	set_pipe_redirection(t_master *data, int cmd_idx)
 		dup2(data->fds[cmd_idx - 1][rd], 0);
 	close_fds(data);
 }
+
+void	set_all_redirections(t_master *data, t_list *lst)
+{
+	t_data	*content;
+
+	while (lst != NULL)
+	{
+		content = ((t_data *)lst->content);
+		if (content->type == pipe_)
+			break ;
+		else if (content->type > prog_arg)
+			set_redirection(content->type, content->str, data);
+		lst = lst->next;
+	}
+}

@@ -55,15 +55,8 @@ void	executor(t_master *data)
 			fatal_error();
 		if (data->pids[cmd_idx] == 0)
 		{
-			ft_lstiter(lst, print_lst);
-			ft_printf("\n");
-			// Apply redirections
-			// Execute command
-
-			// if (error->infile == 0 || cmd_idx - 1 != 0)
-			// 	dup2(data->fds[cmd_idx - 1][rd], 0);
-			// dup2(data->fds[cmd_idx][wr], 1);
-			// close_fds(pipes, margs);
+			set_pipe_redirection(data, cmd_idx);
+			set_all_redirections(data, lst);
 			// cmd_arr = strlst_to_strarr(\
 			// 			cmd_parser(margs->argv[cmd_idx + 1], NULL, 0));
 			// execve(get_cmd_path(cmd_arr[0], margs->env), cmd_arr, margs->env);

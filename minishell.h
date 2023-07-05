@@ -61,6 +61,7 @@ void	init_pipes(t_master *data);
 void	executor(t_master *data);
 void	heredoc(char *delim, int type, t_master *data);
 void	set_redirection(int type, char *str, t_master *data);
+void	set_all_redirections(t_master *data, t_list *lst);
 void	set_pipe_redirection(t_master *data, int cmd_idx);
 char	*expand_env_vars(char *str, t_master *data); // sustituir por función de álvaro
 
