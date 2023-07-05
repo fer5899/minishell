@@ -39,7 +39,7 @@ enum e_prs_type
 	prog_name,
 	prog_arg,
 	in_redir,
-	heredoc,
+	heredoc_,
 	heredoc_q,
 	out_red,
 	out_red_app,
@@ -57,6 +57,9 @@ enum e_pipe_ends
 void	fatal_error(void);
 void	init_pipes(t_master *data);
 void	executor(t_master *data);
+void	heredoc(char *delim, int type, t_master *data);
+void	redirection(int type, char *str, t_master *data);
+char	*expand_env_vars(char *str, t_master *data); // sustituir por función de álvaro
 
 // TESTING
 void	print_lst(void *nd);
