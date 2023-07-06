@@ -66,6 +66,7 @@ void	set_pipe_redirection(t_master *data, int cmd_idx);
 char	*expand_env_vars(char *str, t_master *data); // sustituir por función de álvaro
 void	find_next_cmd(t_list **lst);
 void	init_pipes(t_master *data);
+void	count_pipes(t_master *data);
 char	**get_prog_args(t_list *lst);
 
 // TESTING

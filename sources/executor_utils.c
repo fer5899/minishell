@@ -15,12 +15,10 @@ void	find_next_cmd(t_list **lst)
 	}
 }
 
-void	init_pipes(t_master *data)
+void	count_pipes(t_master *data)
 {
 	t_list	*lst;
-	int		i;
 
-	i = 0;
 	data->n_pipes = 0;
 	lst = data->parsed_lst;
 	while (lst != NULL)
@@ -29,6 +27,14 @@ void	init_pipes(t_master *data)
 			data->n_pipes++;
 		lst = lst->next;
 	}
+}
+
+void	init_pipes(t_master *data)
+{
+	t_list	*lst;
+	int		i;
+
+	i = 0;
 	if (data->n_pipes > MAX_PIPES)
 		fatal_error();
 	while (i < data->n_pipes)

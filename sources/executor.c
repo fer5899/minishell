@@ -23,28 +23,55 @@ char	*get_prog_name(t_list *lst)
 	return (prog_name);
 }
 
-void	exec_builtin(char *name, char **args, t_master *data)
+void	exec_builtin(char *prog_name, char **args, t_master *data)
 {
-	name = NULL;
-	args = NULL;
-	data = NULL;
-	exit(0);
+	int	pn_len;
+
+	args = NULL; // delete when used
+	data = NULL; // delete when used
+	pn_len = ft_strlen(prog_name);
+	if (pn_len == 6 && ft_strncmp(prog_name, "export", 6))
+		return ; // exec export must NOT finish with exit()
+	else if (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
+		return ; // exec unset must NOT finish with exit()
+	else if (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
+		return ; // exec cd must NOT finish with exit()
+	else if (pn_len == 4 && ft_strncmp(prog_name, "exit", 4))
+		return ; // exec exit must NOT finish with exit()
+	else if (pn_len == 4 && ft_strncmp(prog_name, "echo", 4))
+		exit(0); // exec echo must finish with exit()
+	else if (pn_len == 3 && ft_strncmp(prog_name, "env", 3))
+		exit(0); // exec env must finish with exit()
+	else if (pn_len == 3 && ft_strncmp(prog_name, "pwd", 3))
+		exit(0); // exec pwd must finish with exit()
 }
 
-void	check_builtin(char *prog_name, char **args, t_master *data)
+int	check_builtin(char *prog_name, char **args, t_master *data, int cmd_idx)
 {
 	int	pn_len;
 
 	pn_len = ft_strlen(prog_name);
-	if ((pn_len == 4 && ft_strncmp(prog_name, "echo", 4))
-		|| (pn_len == 3 && ft_strncmp(prog_name, "env", 3))
-		|| (pn_len == 6 && ft_strncmp(prog_name, "export", 6))
-		|| (pn_len == 3 && ft_strncmp(prog_name, "pwd", 3))
-		|| (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
-		|| (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
-		|| (pn_len == 4 && ft_strncmp(prog_name, "exit", 4)))
-		exec_builtin(prog_name, args, data);
-		
+	if (data->n_pipes == 0 && cmd_idx < 0 && prog_name != NULL)
+	{
+		if ((pn_len == 6 && ft_strncmp(prog_name, "export", 6))
+			|| (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
+			|| (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
+			|| (pn_len == 4 && ft_strncmp(prog_name, "exit", 4)))
+			return (exec_builtin(prog_name, args, data), 1);
+	}
+	else if (prog_name != NULL)
+	{
+		if ((pn_len == 6 && ft_strncmp(prog_name, "export", 6))
+			|| (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
+			|| (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
+			|| (pn_len == 4 && ft_strncmp(prog_name, "exit", 4)))
+			exit(0);
+		if ((pn_len == 4 && ft_strncmp(prog_name, "echo", 4))
+			|| (pn_len == 3 && ft_strncmp(prog_name, "env", 3))
+			|| (pn_len == 3 && ft_strncmp(prog_name, "pwd", 3)))
+			return (exec_builtin(prog_name, args, data), 1);
+	}
+	return (0);
 }
 
 void	executor(t_master *data)
@@ -54,6 +81,9 @@ void	executor(t_master *data)
 
 	lst = data->parsed_lst;
 	cmd_idx = -1;
+	count_pipes(data);
+	if (check_builtin(get_prog_name(lst), get_prog_args(lst), data, cmd_idx))
+		return ;
 	init_pipes(data);
 	while (lst != NULL)
 	{
@@ -65,9 +95,10 @@ void	executor(t_master *data)
 		{
 			set_pipe_redirection(data, cmd_idx);
 			set_all_redirections(data, lst);
-			check_builtin(get_prog_name(lst), get_prog_args(lst), data);
+			check_builtin(get_prog_name(lst), get_prog_args(lst), data, cmd_idx);
 			// execve(get_prog_path(lst), get_prog_args(lst), get_env(data));
-			exit(0);
+			// SI EN GET_PROG_PATH PROG_NAME == NULL, EXIT(0)
+			exit(1);
 		}
 		find_next_cmd(&lst);
 	}
