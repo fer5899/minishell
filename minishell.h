@@ -9,6 +9,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
@@ -56,18 +57,20 @@ enum e_pipe_ends
 //Main
 
 void	fatal_error(void);
-void	redirection_error(char *str);
+void	file_error(char *str, int code);
 void	init_pipes(t_master *data);
 void	executor(t_master *data);
 void	heredoc(char *delim, int type, t_master *data);
 void	set_redirection(int type, char *str, t_master *data);
-void	set_all_redirections(t_master *data, t_list *lst);
+void	set_all_redirections(t_master *data, t_list *lst, int cmd_idx);
 void	set_pipe_redirection(t_master *data, int cmd_idx);
 char	*expand_env_vars(char *str, t_master *data); // sustituir por función de álvaro
 void	find_next_cmd(t_list **lst);
 void	init_pipes(t_master *data);
 void	count_pipes(t_master *data);
-char	**get_prog_args(t_list *lst);
+char	**get_pargs(t_list *lst);
+char	*get_pname(t_list *lst);
+char	**get_path_arr(t_master *data);
 
 // TESTING
 void	print_lst(void *nd);

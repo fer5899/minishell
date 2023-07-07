@@ -31,7 +31,6 @@ void	count_pipes(t_master *data)
 
 void	init_pipes(t_master *data)
 {
-	t_list	*lst;
 	int		i;
 
 	i = 0;
@@ -58,9 +57,10 @@ int	count_args(t_list *lst)
 			nargs++;
 		lst = lst->next;
 	}
+	return (nargs);
 }
 
-char	**get_prog_args(t_list *lst)
+char	**get_pargs(t_list *lst)
 {
 	char	**args;
 	int		nargs;

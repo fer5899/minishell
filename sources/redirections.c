@@ -22,7 +22,7 @@ void	set_redirection(int type, char *str, t_master *data)
 	if (type == in_redir_)
 	{
 		if (access(str, F_OK | R_OK) == -1)
-			redirection_error(str);
+			file_error(str, 1);
 		fd = open(str, O_RDONLY);
 		dup2(fd, 0);
 		close(fd);
@@ -33,7 +33,7 @@ void	set_redirection(int type, char *str, t_master *data)
 	{
 		if (access(str, F_OK) == 0)
 			if (access(str, W_OK) == -1)
-				redirection_error(str);
+				file_error(str, 1);
 		if (type == out_red_)
 			fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
@@ -83,10 +83,11 @@ void	set_pipe_redirection(t_master *data, int cmd_idx)
 	close_fds(data);
 }
 
-void	set_all_redirections(t_master *data, t_list *lst)
+void	set_all_redirections(t_master *data, t_list *lst, int cmd_idx)
 {
 	t_data	*content;
 
+	set_pipe_redirection(data, cmd_idx);
 	while (lst != NULL)
 	{
 		content = ((t_data *)lst->content);

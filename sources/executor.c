@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-char	*get_prog_name(t_list *lst)
+char	*get_pname(t_list *lst)
 {
 	char	*prog_name;
 	t_data	*content;
@@ -82,7 +82,7 @@ void	executor(t_master *data)
 	lst = data->parsed_lst;
 	cmd_idx = -1;
 	count_pipes(data);
-	if (check_builtin(get_prog_name(lst), get_prog_args(lst), data, cmd_idx))
+	if (check_builtin(get_pname(lst), get_pargs(lst), data, cmd_idx))
 		return ;
 	init_pipes(data);
 	while (lst != NULL)
@@ -93,11 +93,10 @@ void	executor(t_master *data)
 			fatal_error();
 		if (data->pids[cmd_idx] == 0)
 		{
-			set_pipe_redirection(data, cmd_idx);
-			set_all_redirections(data, lst);
-			check_builtin(get_prog_name(lst), get_prog_args(lst), data, cmd_idx);
-			// execve(get_prog_path(lst), get_prog_args(lst), get_env(data));
-			// SI EN GET_PROG_PATH PROG_NAME == NULL, EXIT(0)
+			set_all_redirections(data, lst, cmd_idx);
+			check_builtin(get_pname(lst), get_pargs(lst), data, cmd_idx);
+			execve(get_prog_path(lst, get_path_arr(data)),
+				get_pargs(lst), get_env_arr(data));
 			exit(1);
 		}
 		find_next_cmd(&lst);
