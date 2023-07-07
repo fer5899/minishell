@@ -69,12 +69,15 @@ char	**get_prog_args(t_list *lst)
 	nargs = count_args(lst);
 	args = (char **) ft_calloc(nargs + 1, sizeof(char *));
 	i = 0;
-	while (i < nargs)
+	while (i < nargs && lst != NULL)
 	{
-		if (((t_data *) lst->content)->type == prog_arg_)
+		if (((t_data *) lst->content)->type == prog_arg_
+			|| ((t_data *) lst->content)->type == prog_name_)
+		{
 			args[i] = ((t_data *) lst->content)->str;
+			i++;
+		}
 		lst = lst->next;
-		i++;
 	}
 	args[i] = NULL;
 	return (args);
