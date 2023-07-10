@@ -37,18 +37,22 @@ void	set_redirection(int type, char *str, t_master *data)
 		if (type == out_red_)
 			fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
-			fd = open(str, O_WRONLY | O_CREAT, 0644);
+			fd = open(str, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		dup2(fd, 1);
 		close(fd);
 	}
 }
+
+// void	pre_heredoc(char *delim, int type, t_master *data)
+// {
+// }
 
 void	heredoc(char *delim, int type, t_master *data)
 {
 	int		tmp_fd;
 	char	*input;
 
-	tmp_fd = open(TEMP_PATH, O_WRONLY | O_CREAT | O_EXCL | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada fork
+	tmp_fd = open(TEMP_PATH, O_WRONLY | O_CREAT | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada heredoc
 	write(1, "> ", 2);
 	input = get_next_line(0);
 	if (type == heredoc_)

@@ -33,14 +33,17 @@ char	**get_env_arr(t_master *data)
 	return (env_arr);
 }
 
-int	is_filepath_valid(char **filepath)
+int	is_filepath_valid(char *filepath)
 {
 	if (filepath == NULL)
 		exit(0);
 	if (access(filepath, F_OK | X_OK) == 0)
 		return (1);
 	else if (errno == 13)
+	{
 		file_error(filepath, 126);
+		return (1);
+	}
 	else
 		return (0);
 }
@@ -54,9 +57,9 @@ char	**get_path_arr(t_master *data)
 		return (NULL);
 	while (env != NULL)
 	{
-		if (ft_strlen(((t_env *)env)->key) == 4
-			&& ft_strncmp(((t_env *)env)->key, "PATH", 4) == 0)
-			return (ft_split(((t_env *)env)->value, ':'));
+		if (ft_strlen(((t_env *)(env->content))->key) == 4
+			&& ft_strncmp(((t_env *)(env->content))->key, "PATH", 4) == 0)
+			return (ft_split(((t_env *)(env->content))->value, ':'));
 		env = env->next;
 	}
 	return (NULL);
@@ -71,15 +74,18 @@ char	*get_prog_path(t_list *lst, char **path_arr)
 	cmd = get_pname(lst);
 	if (is_filepath_valid(cmd))
 		return (cmd);
-	while (*path_arr != NULL)
+	if (path_arr != NULL)
 	{
-		add_slash = ft_strjoin(*path_arr, "/");
-		fullpath = ft_strjoin(add_slash, cmd);
-		free(add_slash);
-		if (is_filepath_valid(fullpath))
-			return (fullpath);
-		path_arr++;
-		free(fullpath);
+		while (*path_arr != NULL)
+		{
+			add_slash = ft_strjoin(*path_arr, "/");
+			fullpath = ft_strjoin(add_slash, cmd);
+			free(add_slash);
+			if (is_filepath_valid(fullpath))
+				return (fullpath);
+			path_arr++;
+			free(fullpath);
+		}
 	}
 	//free everything
 	ft_printf_fd("minishell: %s: command not found\n", 2, cmd);

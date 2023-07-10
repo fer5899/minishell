@@ -10,6 +10,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
+# include <sys/wait.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
@@ -45,13 +46,13 @@ enum e_prs_type
 	heredoc_q_,
 	out_red_,
 	out_red_app_,
-	pipe_
+	pipe_,
 };
 
 enum e_pipe_ends
 {
 	rd,
-	wr
+	wr,
 };
 
 //Main
@@ -71,8 +72,11 @@ void	count_pipes(t_master *data);
 char	**get_pargs(t_list *lst);
 char	*get_pname(t_list *lst);
 char	**get_path_arr(t_master *data);
+char	*get_prog_path(t_list *lst, char **path_arr);
+char	**get_env_arr(t_master *data);
 
 // TESTING
 void	print_lst(void *nd);
+void	print_str_arr(char **arr);
 
 #endif

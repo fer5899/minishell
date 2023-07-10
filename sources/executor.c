@@ -18,7 +18,7 @@ char	*get_pname(t_list *lst)
 		}
 		lst = lst->next;
 	}
-	if (prog_name_ == NULL)
+	if (prog_name == NULL)
 		exit(0); // free stuff as well
 	return (prog_name);
 }
@@ -53,22 +53,22 @@ int	check_builtin(char *prog_name, char **args, t_master *data, int cmd_idx)
 	pn_len = ft_strlen(prog_name);
 	if (data->n_pipes == 0 && cmd_idx < 0 && prog_name != NULL)
 	{
-		if ((pn_len == 6 && ft_strncmp(prog_name, "export", 6))
-			|| (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
-			|| (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
-			|| (pn_len == 4 && ft_strncmp(prog_name, "exit", 4)))
+		if ((pn_len == 6 && !ft_strncmp(prog_name, "export", 6))
+			|| (pn_len == 5 && !ft_strncmp(prog_name, "unset", 5))
+			|| (pn_len == 2 && !ft_strncmp(prog_name, "cd", 2))
+			|| (pn_len == 4 && !ft_strncmp(prog_name, "exit", 4)))
 			return (exec_builtin(prog_name, args, data), 1);
 	}
 	else if (prog_name != NULL)
 	{
-		if ((pn_len == 6 && ft_strncmp(prog_name, "export", 6))
-			|| (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
-			|| (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
-			|| (pn_len == 4 && ft_strncmp(prog_name, "exit", 4)))
+		if ((pn_len == 6 && !ft_strncmp(prog_name, "export", 6))
+			|| (pn_len == 5 && !ft_strncmp(prog_name, "unset", 5))
+			|| (pn_len == 2 && !ft_strncmp(prog_name, "cd", 2))
+			|| (pn_len == 4 && !ft_strncmp(prog_name, "exit", 4)))
 			exit(0);
-		if ((pn_len == 4 && ft_strncmp(prog_name, "echo", 4))
-			|| (pn_len == 3 && ft_strncmp(prog_name, "env", 3))
-			|| (pn_len == 3 && ft_strncmp(prog_name, "pwd", 3)))
+		if ((pn_len == 4 && !ft_strncmp(prog_name, "echo", 4))
+			|| (pn_len == 3 && !ft_strncmp(prog_name, "env", 3))
+			|| (pn_len == 3 && !ft_strncmp(prog_name, "pwd", 3)))
 			return (exec_builtin(prog_name, args, data), 1);
 	}
 	return (0);
