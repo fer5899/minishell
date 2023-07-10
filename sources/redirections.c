@@ -13,7 +13,7 @@ void	set_redirection(int type, char *str, t_master *data)
 		close(fd);
 	}
 	else if (type == heredoc_ || type == heredoc_q_)
-		heredoc(str, type, data);
+		heredoc(data);
 	else if (type == out_red_ || type == out_red_app_)
 	{
 		if (access(str, F_OK) == 0)
@@ -28,33 +28,41 @@ void	set_redirection(int type, char *str, t_master *data)
 	}
 }
 
-void	heredoc(char *delim, int type, t_master *data)
+void	get_all_input_heredoc(t_master *data)
+{
+	int		type;
+	t_list	*lst;
+
+	lst = data->parsed_lst;
+	data->cmd_idx = 0;
+	data->heredoc_idx = 0;
+	while (lst != NULL)
+	{
+		type = ((t_data *) lst->content)->type;
+		if (type == pipe_)
+		{
+			data->cmd_idx++;
+			data->heredoc_idx = 0;
+		}
+		if (type == heredoc_ || type == heredoc_q_)
+		{
+			input_heredoc(((t_data *) lst->content)->str, type, data);
+			data->heredoc_idx++;
+		}
+		lst = lst->next;
+	}
+	data->heredoc_idx = 0;
+}
+
+void	heredoc(t_master *data)
 {
 	int		tmp_fd;
-	char	*input;
 
-	tmp_fd = open(TEMP_PATH, O_WRONLY | O_CREAT | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada heredoc
-	write(1, "> ", 2);
-	input = get_next_line(0);
-	if (type == heredoc_)
-		data = NULL; // borrar cuando exista expand_env_vars
-	// 	input = expand_env_vars(input, data);
-	while (ft_strlen(input) - 1 != ft_strlen(delim)
-		|| ft_strncmp(input, delim, ft_strlen(input) - 1) != 0)
-	{
-		write(tmp_fd, input, ft_strlen(input));
-		free(input);
-		write(1, "> ", 2);
-		input = get_next_line(0);
-		// if (type == heredoc_)
-		// 	input = expand_env_vars(input, data);
-	}
-	free(input);
-	close(tmp_fd);
-	tmp_fd = open(TEMP_PATH, O_RDONLY);
-	unlink(TEMP_PATH);
+	tmp_fd = open(get_tmp_path(data), O_RDONLY);
+	unlink(get_tmp_path(data));
 	dup2(tmp_fd, 0);
 	close(tmp_fd);
+	data->heredoc_idx++;
 }
 
 void	set_pipe_redirection(t_master *data)

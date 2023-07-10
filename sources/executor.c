@@ -79,6 +79,7 @@ void	executor(t_master *data)
 	t_list	*lst;
 
 	lst = data->parsed_lst;
+	get_all_input_heredoc(data);
 	data->cmd_idx = -1;
 	count_pipes(data);
 	if (check_builtin(get_pname(lst), get_pargs(lst), data))

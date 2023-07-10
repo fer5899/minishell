@@ -63,7 +63,7 @@ void	fatal_error(void);
 void	file_error(char *str, int code);
 void	init_pipes(t_master *data);
 void	executor(t_master *data);
-void	heredoc(char *delim, int type, t_master *data);
+void	heredoc(t_master *data);
 void	set_redirection(int type, char *str, t_master *data);
 void	set_all_redirections(t_master *data, t_list *lst);
 void	set_pipe_redirection(t_master *data);
@@ -76,8 +76,10 @@ char	*get_pname(t_list *lst);
 char	**get_path_arr(t_master *data);
 char	*get_prog_path(t_list *lst, char **path_arr);
 char	**get_env_arr(t_master *data);
-char	*gen_tmp_path(t_master *data);
+char	*get_tmp_path(t_master *data);
 void	close_fds(t_master *data);
+void	input_heredoc(char *delim, int type, t_master *data);
+void	get_all_input_heredoc(t_master *data);
 
 // TESTING
 void	print_lst(void *nd);
