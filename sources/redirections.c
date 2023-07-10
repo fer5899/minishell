@@ -57,22 +57,22 @@ void	heredoc(char *delim, int type, t_master *data)
 	close(tmp_fd);
 }
 
-void	set_pipe_redirection(t_master *data, int cmd_idx)
+void	set_pipe_redirection(t_master *data)
 {
 	if (data->n_pipes <= 0)
 		return ;
-	if (cmd_idx >= 0 && cmd_idx < data->n_pipes)
-		dup2(data->fds[cmd_idx][wr], 1);
-	if (cmd_idx > 0 && cmd_idx <= data->n_pipes)
-		dup2(data->fds[cmd_idx - 1][rd], 0);
+	if (data->cmd_idx >= 0 && data->cmd_idx < data->n_pipes)
+		dup2(data->fds[data->cmd_idx][wr], 1);
+	if (data->cmd_idx > 0 && data->cmd_idx <= data->n_pipes)
+		dup2(data->fds[data->cmd_idx - 1][rd], 0);
 	close_fds(data);
 }
 
-void	set_all_redirections(t_master *data, t_list *lst, int cmd_idx)
+void	set_all_redirections(t_master *data, t_list *lst)
 {
 	t_data	*content;
 
-	set_pipe_redirection(data, cmd_idx);
+	set_pipe_redirection(data);
 	while (lst != NULL)
 	{
 		content = ((t_data *)lst->content);

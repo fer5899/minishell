@@ -15,17 +15,17 @@ void	close_fds(t_master *data)
 	}
 }
 
-char	*gen_tmp_path(int cmd_idx, int heredoc_idx)
+char	*gen_tmp_path(t_master *data)
 {
 	char	*itoa;
 	char	*and_underscore;
 	char	*and_heredoc;
 	char	*and_extension;
 
-	itoa = ft_itoa(cmd_idx);
+	itoa = ft_itoa(data->cmd_idx);
 	and_underscore = ft_strjoin(itoa, "_");
 	free(itoa);
-	itoa = ft_itoa(heredoc_idx);
+	itoa = ft_itoa(data->heredoc_idx);
 	and_heredoc = ft_strjoin(and_underscore, itoa);
 	free(itoa);
 	free(and_underscore);

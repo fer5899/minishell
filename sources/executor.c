@@ -46,12 +46,12 @@ void	exec_builtin(char *prog_name, char **args, t_master *data)
 		exit(0); // exec pwd must finish with exit()
 }
 
-int	check_builtin(char *prog_name, char **args, t_master *data, int cmd_idx)
+int	check_builtin(char *prog_name, char **args, t_master *data)
 {
 	int	pn_len;
 
 	pn_len = ft_strlen(prog_name);
-	if (data->n_pipes == 0 && cmd_idx < 0 && prog_name != NULL)
+	if (data->n_pipes == 0 && data->cmd_idx < 0 && prog_name != NULL)
 	{
 		if ((pn_len == 6 && !ft_strncmp(prog_name, "export", 6))
 			|| (pn_len == 5 && !ft_strncmp(prog_name, "unset", 5))
@@ -77,24 +77,23 @@ int	check_builtin(char *prog_name, char **args, t_master *data, int cmd_idx)
 void	executor(t_master *data)
 {
 	t_list	*lst;
-	int		cmd_idx;
 
 	lst = data->parsed_lst;
-	cmd_idx = -1;
+	data->cmd_idx = -1;
 	count_pipes(data);
-	if (check_builtin(get_pname(lst), get_pargs(lst), data, cmd_idx))
+	if (check_builtin(get_pname(lst), get_pargs(lst), data))
 		return ;
 	init_pipes(data);
 	while (lst != NULL)
 	{
-		cmd_idx++;
-		data->pids[cmd_idx] = fork();
-		if (data->pids[cmd_idx] == -1)
+		data->cmd_idx++;
+		data->pids[data->cmd_idx] = fork();
+		if (data->pids[data->cmd_idx] == -1)
 			fatal_error();
-		if (data->pids[cmd_idx] == 0)
+		if (data->pids[data->cmd_idx] == 0)
 		{
-			set_all_redirections(data, lst, cmd_idx);
-			check_builtin(get_pname(lst), get_pargs(lst), data, cmd_idx);
+			set_all_redirections(data, lst);
+			check_builtin(get_pname(lst), get_pargs(lst), data);
 			execve(get_prog_path(lst, get_path_arr(data)),
 				get_pargs(lst), get_env_arr(data));
 			exit(1);
