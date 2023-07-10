@@ -1,20 +1,5 @@
 #include "../minishell.h"
 
-void	close_fds(t_master *data)
-{
-	int	idx;
-
-	idx = 0;
-	while (idx < data->n_pipes)
-	{
-		if (data->fds[idx][rd] > 0)
-			close(data->fds[idx][rd]);
-		if (data->fds[idx][wr] > 0)
-			close(data->fds[idx][wr]);
-		idx++;
-	}
-}
-
 void	set_redirection(int type, char *str, t_master *data)
 {
 	int	fd;
@@ -42,10 +27,6 @@ void	set_redirection(int type, char *str, t_master *data)
 		close(fd);
 	}
 }
-
-// void	pre_heredoc(char *delim, int type, t_master *data)
-// {
-// }
 
 void	heredoc(char *delim, int type, t_master *data)
 {

@@ -74,6 +74,8 @@ char	*get_pname(t_list *lst);
 char	**get_path_arr(t_master *data);
 char	*get_prog_path(t_list *lst, char **path_arr);
 char	**get_env_arr(t_master *data);
+char	*gen_tmp_path(int cmd_idx, int heredoc_idx);
+void	close_fds(t_master *data);
 
 // TESTING
 void	print_lst(void *nd);
