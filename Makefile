@@ -13,7 +13,8 @@ LIBFT = ./Libft/libft.a
 SRC = minishell.c \
 	ft_split_env.c \
 	env_variables_minishell.c \
-	free_minishell.c
+	free_minishell.c \
+	ft_split_parser.c
 
 # OBJECTS
 #OBJ_DIR = minishell/objects

@@ -34,19 +34,19 @@ int	ft_type_of_data(char *str, int arg_flag)
 	{
 		str++ ;
 		if (*str == '>')
-			return (5);
+			return (6);
 		else
-			return (4);
+			return (5);
 	}
 	else if (*str == '|')
-		return (6);
+		return (7);
 	else if (arg_flag == 0)
 		return (0);
 	else
 		return (1);
 }
 
-t_list	*inicialize_data(char **split)
+t_list	*inicialize_data(t_split *split)
 {
 	int		arg_flag;
 	t_list	*list;
@@ -55,22 +55,39 @@ t_list	*inicialize_data(char **split)
 
 	list = NULL;
 	arg_flag = 0;
-	while (*split)
+	while (split->str)
 	{
 		data = ft_calloc(1, sizeof(t_data));
-		data->type = ft_type_of_data(*split, arg_flag);
+		data->type = ft_type_of_data(split->str, arg_flag);
 		if (data->type == 0)
 			arg_flag = 1;
-		else if (data->type == 6)
-			arg_flag = 0;
-		if (data->type == 2 || data->type == 4 || data->type == 5)
+		else if (data->type == 7)
 		{
-			free(*split);
+			if ((split + 1)->str == NULL)
+			{
+				printf("%s\n", "Syntax error");
+				return (NULL);
+			}
+			else
+				arg_flag = 0;
+		}
+		if (data->type == 2 || data->type == 3 || data->type == 5 
+			|| data->type == 6)
+		{
+			free(split->str);
 			split++ ;
-			data->str = *split;
+			if (data->type == 3 && (split->char_type == '\'' || split->char_type == '"'))
+				data->type = 4;
+			if (split->str == NULL)
+			{
+				printf("%s\n", "Syntax error");
+				return (NULL);
+			}
+			else
+				data->str = split->str;
 		}
 		else
-			data->str = *split;
+			data->str = split->str;
 		new = ft_lstnew(data);
 		ft_lstadd_back(&list, new);
 		split++ ;
@@ -78,64 +95,18 @@ t_list	*inicialize_data(char **split)
 	return (list);
 }
 
-int	single_quotes_error(char *command)
+void	ft_parse_input(char *command, t_master *master)
 {
-	int	flag_single;
+	t_split	*split;
 
-	flag_single = 0;
-	while (*command)
+	split = ft_split_parser(command);
+	if (split->error == 1)
 	{
-		if (*command == '\'')
-		{
-			if (flag_single == 1)
-				flag_single = 0;
-			else
-				flag_single = 1;
-		}
-		command++;
+		printf("%s\n", "Syntax error");
+		return ;
 	}
-	if (flag_single == 1)
-	{
-		printf("%s\n", "Quote error");
-		return (1);
-	}
-	return (0);
-}
-
-int	double_quotes_error(char *command)
-{
-	int	flag_double;
-
-	flag_double = 0;
-	while (*command)
-	{
-		if (*command == '\"')
-		{
-			if (flag_double == 1)
-				flag_double = 0;
-			else
-				flag_double = 1;
-		}
-		command++;
-	}
-	if (flag_double == 1)
-	{
-		printf("%s\n", "Quote error");
-		return (1);
-	}
-	return (0);
-}
-
-int	ft_parse_input(char *command, t_master *master)
-{
-	char	**split;
-
-	//if (single_quotes_error(command) == 1 || double_quotes_error(command) == 1)
-	//	return (1);
-	split = ft_split(command, ' ');
 	master->parsed_lst = inicialize_data(split);
 	free(split);
-	return (0);
 }
 
 int	main(void)
@@ -156,12 +127,10 @@ int	main(void)
 		}
 		else
 		{
-			if (ft_parse_input(command, master) == 0)
-			{
-				print_parsed_list(master);
-				ft_free_data_list(master);
-				free(command);
-			}
+			ft_parse_input(command, master);
+			print_parsed_list(master);
+			ft_free_data_list(master);
+			free(command);
 		}
 	}
 	ft_free_env_list(master);
