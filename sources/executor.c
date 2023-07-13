@@ -104,5 +104,6 @@ void	executor(t_master *data)
 		find_next_cmd(&lst);
 	}
 	close_fds(data);
+	catch_exit_code(data);
 }
 

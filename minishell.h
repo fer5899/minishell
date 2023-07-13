@@ -38,6 +38,7 @@ typedef struct s_master
 	int		n_pipes;
 	int		cmd_idx;
 	int		heredoc_idx;
+	int		exit_code;
 }				t_master;
 
 enum e_prs_type
@@ -81,6 +82,7 @@ char	*get_tmp_path(t_master *data);
 void	close_fds(t_master *data);
 void	input_heredoc(char *delim, int type, t_master *data);
 void	get_all_input_heredoc(t_master *data);
+void	catch_exit_code(t_master *data);
 
 // TESTING
 void	print_lst(void *nd);

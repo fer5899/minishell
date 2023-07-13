@@ -7,7 +7,8 @@ NAME=minishell
 SRC_DIR = sources
 MAIN = $(SRC_DIR)/minishell.c
 SRC = 	$(SRC_DIR)/executor.c $(SRC_DIR)/redirections.c $(SRC_DIR)/errors.c \
-		$(SRC_DIR)/executor_utils.c $(SRC_DIR)/execve_utils.c $(SRC_DIR)/redirections_utils.c
+		$(SRC_DIR)/executor_utils.c $(SRC_DIR)/execve_utils.c $(SRC_DIR)/redirections_utils.c \
+		$(SRC_DIR)/exits.c
 
 TEST_DIR = testing
 TEST_MAIN = $(TEST_DIR)/executor_test.c
