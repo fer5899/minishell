@@ -17,17 +17,14 @@ void	close_fds(t_master *data)
 
 char	*get_tmp_path(t_master *data)
 {
-	char	*and_cmd;
 	char	*itoa;
 	char	*and_underscore;
 	char	*and_heredoc;
 	char	*and_extension;
 
 	itoa = ft_itoa(data->cmd_idx);
-	and_cmd = ft_strjoin("tmp/", itoa);
+	and_underscore = ft_strjoin(itoa, "_");
 	free(itoa);
-	and_underscore = ft_strjoin(and_cmd, "_");
-	free(and_cmd);
 	itoa = ft_itoa(data->heredoc_idx);
 	and_heredoc = ft_strjoin(and_underscore, itoa);
 	free(itoa);

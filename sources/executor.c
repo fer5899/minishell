@@ -74,6 +74,14 @@ int	check_builtin(char *prog_name, char **args, t_master *data)
 	return (0);
 }
 
+void	run_process(t_master *data, t_list *lst)
+{
+	set_all_redirections(data, lst);
+	check_builtin(get_pname(lst), get_pargs(lst), data);
+	execve(get_prog_path(lst, get_path_arr(data)),
+		get_pargs(lst), get_env_arr(data));
+}
+
 void	executor(t_master *data)
 {
 	t_list	*lst;
@@ -92,14 +100,9 @@ void	executor(t_master *data)
 		if (data->pids[data->cmd_idx] == -1)
 			fatal_error();
 		if (data->pids[data->cmd_idx] == 0)
-		{
-			set_all_redirections(data, lst);
-			check_builtin(get_pname(lst), get_pargs(lst), data);
-			execve(get_prog_path(lst, get_path_arr(data)),
-				get_pargs(lst), get_env_arr(data));
-			exit(1);
-		}
+			run_process(data, lst);
 		find_next_cmd(&lst);
 	}
+	close_fds(data);
 }
 

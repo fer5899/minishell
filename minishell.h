@@ -10,7 +10,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
-# include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
