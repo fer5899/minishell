@@ -2,23 +2,13 @@
 
 void	pwd(void)
 {
-	char	*buf;
-	int		buf_size;	
+	char	*pwd_str;
 
-	buf_size = 100;
-	buf = (char *) ft_calloc(buf_size, sizeof(char));
-	while (!getcwd(buf, buf_size))
-	{
-		free(buf);
-		buf_size += 100;
-		if (buf_size > 2147483500)
-			exit(1);
-		buf = (char *) ft_calloc(buf_size, sizeof(char));
-	}
-	ft_printf("%s\n", buf);
+	pwd_str = get_pwd();
+	ft_printf("%s\n", pwd_str);
+	free(pwd_str);
 	exit(0);
 }
-
 
 void	echo(t_master *data, char **args)
 {
@@ -54,3 +44,34 @@ void	env(t_master *data)
 	exit(0);
 }
 
+void	cd(t_master *data, char **args)
+{
+	if (data->nargs < 2)
+	{
+		data->exit_code = 0;
+		return ;
+	}
+	if (chdir(args[1]) == -1)
+	{
+		ft_printf_fd("minishell: cd: %s: No such file or directory",
+			2, args[1]);
+		data->exit_code = 1;
+	}
+	else
+		data->exit_code = 0;
+	// actualizar PWD y OLD_PWD
+}
+
+void	exit_builtin(t_master *data, char **args)
+{
+	if (data->nargs > 2)
+	{
+		ft_printf_fd("minishell: exit: too many arguments", 2);
+		exit(1);
+	}
+	if (data->nargs == 2)
+	{
+		// coger is_digit y is_int_size de philosophers y hacer atoi
+	}
+
+}

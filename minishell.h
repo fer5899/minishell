@@ -89,6 +89,8 @@ void	pwd(void);
 void	echo(t_master *data, char **args);
 void	print_env(void *nd);
 void	env(t_master *data);
+char	*get_pwd(void);
+void	cd(t_master *data, char **args);
 
 // TESTING
 void	print_lst(void *nd);

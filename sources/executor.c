@@ -33,7 +33,7 @@ void	exec_builtin(char *prog_name, char **args, t_master *data)
 	else if (pn_len == 5 && !ft_strncmp(prog_name, "unset", 5))
 		return ; // exec unset must NOT finish with exit()
 	else if (pn_len == 2 && !ft_strncmp(prog_name, "cd", 2))
-		return ; // exec cd must NOT finish with exit()
+		cd(data, args);
 	else if (pn_len == 4 && !ft_strncmp(prog_name, "exit", 4))
 		return ;
 	else if (pn_len == 4 && !ft_strncmp(prog_name, "echo", 4))
@@ -103,6 +103,7 @@ void	executor(t_master *data)
 		find_next_cmd(&lst);
 	}
 	close_fds(data);
+	ft_printf("exit code caught\n");
 	catch_exit_code(data);
 }
 
