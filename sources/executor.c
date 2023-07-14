@@ -27,23 +27,21 @@ void	exec_builtin(char *prog_name, char **args, t_master *data)
 {
 	int	pn_len;
 
-	args = NULL; // delete when used
-	data = NULL; // delete when used
 	pn_len = ft_strlen(prog_name);
-	if (pn_len == 6 && ft_strncmp(prog_name, "export", 6))
+	if (pn_len == 6 && !ft_strncmp(prog_name, "export", 6))
 		return ; // exec export must NOT finish with exit()
-	else if (pn_len == 5 && ft_strncmp(prog_name, "unset", 5))
+	else if (pn_len == 5 && !ft_strncmp(prog_name, "unset", 5))
 		return ; // exec unset must NOT finish with exit()
-	else if (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
+	else if (pn_len == 2 && !ft_strncmp(prog_name, "cd", 2))
 		return ; // exec cd must NOT finish with exit()
-	else if (pn_len == 4 && ft_strncmp(prog_name, "exit", 4))
+	else if (pn_len == 4 && !ft_strncmp(prog_name, "exit", 4))
 		return ;
-	else if (pn_len == 4 && ft_strncmp(prog_name, "echo", 4))
-		exit(0); // exec echo must finish with exit()
-	else if (pn_len == 3 && ft_strncmp(prog_name, "env", 3))
-		exit(0); // exec env must finish with exit()
-	else if (pn_len == 3 && ft_strncmp(prog_name, "pwd", 3))
-		exit(0); // exec pwd must finish with exit()
+	else if (pn_len == 4 && !ft_strncmp(prog_name, "echo", 4))
+		echo(data, args);
+	else if (pn_len == 3 && !ft_strncmp(prog_name, "env", 3))
+		env(data);
+	else if (pn_len == 3 && !ft_strncmp(prog_name, "pwd", 3))
+		pwd();
 }
 
 int	check_builtin(char *prog_name, char **args, t_master *data)
@@ -77,9 +75,9 @@ int	check_builtin(char *prog_name, char **args, t_master *data)
 void	run_process(t_master *data, t_list *lst)
 {
 	set_all_redirections(data, lst);
-	check_builtin(get_pname(lst), get_pargs(lst), data);
+	check_builtin(get_pname(lst), get_pargs(data, lst), data);
 	execve(get_prog_path(lst, get_path_arr(data)),
-		get_pargs(lst), get_env_arr(data));
+		get_pargs(data, lst), get_env_arr(data));
 	exit(0);
 }
 
@@ -91,7 +89,7 @@ void	executor(t_master *data)
 	get_all_input_heredoc(data);
 	data->cmd_idx = -1;
 	count_pipes(data);
-	if (check_builtin(get_pname(lst), get_pargs(lst), data))
+	if (check_builtin(get_pname(lst), get_pargs(data, lst), data))
 		return ;
 	init_pipes(data);
 	while (lst != NULL)

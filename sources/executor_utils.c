@@ -60,16 +60,15 @@ int	count_args(t_list *lst)
 	return (nargs);
 }
 
-char	**get_pargs(t_list *lst)
+char	**get_pargs(t_master *data, t_list *lst)
 {
 	char	**args;
-	int		nargs;
 	int		i;
 
-	nargs = count_args(lst);
-	args = (char **) ft_calloc(nargs + 1, sizeof(char *));
+	data->nargs = count_args(lst);
+	args = (char **) ft_calloc(data->nargs + 1, sizeof(char *));
 	i = 0;
-	while (i < nargs && lst != NULL)
+	while (i < data->nargs && lst != NULL)
 	{
 		if (((t_data *) lst->content)->type == prog_arg_
 			|| ((t_data *) lst->content)->type == prog_name_)

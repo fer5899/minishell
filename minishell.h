@@ -12,6 +12,7 @@
 # include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
@@ -38,6 +39,7 @@ typedef struct s_master
 	int		n_pipes;
 	int		cmd_idx;
 	int		heredoc_idx;
+	int		nargs;
 	int		exit_code;
 }				t_master;
 
@@ -73,7 +75,7 @@ char	*expand_env_vars(char *str, t_master *data); // sustituir por funci√≥n de √
 void	find_next_cmd(t_list **lst);
 void	init_pipes(t_master *data);
 void	count_pipes(t_master *data);
-char	**get_pargs(t_list *lst);
+char	**get_pargs(t_master *data, t_list *lst);
 char	*get_pname(t_list *lst);
 char	**get_path_arr(t_master *data);
 char	*get_prog_path(t_list *lst, char **path_arr);
@@ -83,6 +85,10 @@ void	close_fds(t_master *data);
 void	input_heredoc(char *delim, int type, t_master *data);
 void	get_all_input_heredoc(t_master *data);
 void	catch_exit_code(t_master *data);
+void	pwd(void);
+void	echo(t_master *data, char **args);
+void	print_env(void *nd);
+void	env(t_master *data);
 
 // TESTING
 void	print_lst(void *nd);
