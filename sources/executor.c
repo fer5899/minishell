@@ -37,7 +37,7 @@ void	exec_builtin(char *prog_name, char **args, t_master *data)
 	else if (pn_len == 2 && ft_strncmp(prog_name, "cd", 2))
 		return ; // exec cd must NOT finish with exit()
 	else if (pn_len == 4 && ft_strncmp(prog_name, "exit", 4))
-		return ; // exec exit must NOT finish with exit()
+		return ;
 	else if (pn_len == 4 && ft_strncmp(prog_name, "echo", 4))
 		exit(0); // exec echo must finish with exit()
 	else if (pn_len == 3 && ft_strncmp(prog_name, "env", 3))
@@ -80,6 +80,7 @@ void	run_process(t_master *data, t_list *lst)
 	check_builtin(get_pname(lst), get_pargs(lst), data);
 	execve(get_prog_path(lst, get_path_arr(data)),
 		get_pargs(lst), get_env_arr(data));
+	exit(0);
 }
 
 void	executor(t_master *data)

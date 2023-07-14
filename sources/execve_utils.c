@@ -72,7 +72,7 @@ char	*get_prog_path(t_list *lst, char **path_arr)
 	char	*fullpath;
 
 	cmd = get_pname(lst);
-	if (is_filepath_valid(cmd))
+	if (is_filepath_valid(cmd) && (cmd[0] == '/' || cmd[0] == '.'))
 		return (cmd);
 	if (path_arr != NULL)
 	{
