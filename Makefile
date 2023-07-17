@@ -14,7 +14,8 @@ SRC = minishell.c \
 	ft_split_env.c \
 	env_variables_minishell.c \
 	free_minishell.c \
-	ft_split_parser.c
+	ft_split_parser.c \
+	expand_env_variables.c
 
 # OBJECTS
 #OBJ_DIR = minishell/objects

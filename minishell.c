@@ -15,7 +15,7 @@ void	print_parsed_list(t_master *master)
 	while (current)
 	{
 		data = (t_data *)current->content;
-		printf("%s=%d\n", data->str, data->type);
+		printf("%s=%d - %c\n", data->str, data->type, data->char_type);
 		current = current->next;
 	}
 }
@@ -46,7 +46,35 @@ int	ft_type_of_data(char *str, int arg_flag)
 		return (1);
 }
 
-t_list	*inicialize_data(t_split *split)
+void	*ft_syntax_error(void)
+{
+	printf("%s\n", "Syntax error");
+	return (NULL);
+}
+
+void	*ft_value_for_type_of_data(t_data *data, t_split *split)
+{
+	if (data->type == 2 || data->type == 3 || data->type == 5 
+			|| data->type == 6)
+	{
+		free(split->str);
+		split++ ;
+		if (data->type == 3 && (split->char_type == '\'' || split->char_type == '"'))
+			data->type = 4;
+		if (split->str == NULL)
+			return (ft_syntax_error());
+		else
+		{
+			data->str = split->str;
+			data->char_type = split->char_type;
+		}
+	}
+	else
+		data->str = split->str;
+	return ((void *)1);
+}
+
+t_list	*inicialize_data(t_split *split, t_master *master)
 {
 	int		arg_flag;
 	t_list	*list;
@@ -59,35 +87,20 @@ t_list	*inicialize_data(t_split *split)
 	{
 		data = ft_calloc(1, sizeof(t_data));
 		data->type = ft_type_of_data(split->str, arg_flag);
+		data->char_type = split->char_type;
 		if (data->type == 0)
 			arg_flag = 1;
 		else if (data->type == 7)
 		{
 			if ((split + 1)->str == NULL)
-			{
-				printf("%s\n", "Syntax error");
-				return (NULL);
-			}
+				return (ft_syntax_error());
 			else
 				arg_flag = 0;
 		}
-		if (data->type == 2 || data->type == 3 || data->type == 5 
-			|| data->type == 6)
-		{
-			free(split->str);
-			split++ ;
-			if (data->type == 3 && (split->char_type == '\'' || split->char_type == '"'))
-				data->type = 4;
-			if (split->str == NULL)
-			{
-				printf("%s\n", "Syntax error");
-				return (NULL);
-			}
-			else
-				data->str = split->str;
-		}
-		else
-			data->str = split->str;
+		if (ft_value_for_type_of_data(data, split) == NULL)
+			return (NULL);
+		if (data->char_type != '\'')
+			data->str = expand_env_variables(data->str, master);
 		new = ft_lstnew(data);
 		ft_lstadd_back(&list, new);
 		split++ ;
@@ -105,7 +118,7 @@ void	ft_parse_input(char *command, t_master *master)
 		printf("%s\n", "Syntax error");
 		return ;
 	}
-	master->parsed_lst = inicialize_data(split);
+	master->parsed_lst = inicialize_data(split, master);
 	free(split);
 }
 

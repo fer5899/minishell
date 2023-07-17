@@ -20,6 +20,7 @@ typedef struct s_data
 {
 	int		type;
 	char	*str;
+	char	char_type;
 }				t_data;
 
 typedef struct s_master
@@ -85,5 +86,9 @@ void		ft_free_data_list(t_master *master);
 
 //Split parser - the first parser for single and double quotes
 t_split		*ft_split_parser(char *s);
+
+
+// Expand env variables
+char		*expand_env_variables(char *str, t_master *master);
 
 #endif
