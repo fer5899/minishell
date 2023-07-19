@@ -38,19 +38,16 @@ void	echo(t_master *data, char **args)
 	exit(0);
 }
 
-void	env(t_master *data)
-{
-	ft_lstiter(data->env_lst, print_env);
-	exit(0);
-}
-
 void	cd(t_master *data, char **args)
 {
+	char	*old_pwd;
+
 	if (data->nargs < 2)
 	{
 		data->exit_code = 0;
 		return ;
 	}
+	old_pwd = get_pwd();
 	if (chdir(args[1]) == -1)
 	{
 		ft_printf_fd("minishell: cd: %s: No such file or directory",
@@ -58,12 +55,18 @@ void	cd(t_master *data, char **args)
 		data->exit_code = 1;
 	}
 	else
+	{
 		data->exit_code = 0;
-	// actualizar PWD y OLD_PWD
+		update_env(data, ft_strdup("OLDPWD"), old_pwd, 0);
+		update_env(data, ft_strdup("PWD"), get_pwd(), 0);
+	}
 }
 
 void	exit_builtin(t_master *data, char **args)
 {
+	int	prev_exit;
+
+	prev_exit = data->exit_code;
 	if (data->nargs > 2)
 	{
 		ft_printf_fd("minishell: exit: too many arguments", 2);
@@ -71,7 +74,14 @@ void	exit_builtin(t_master *data, char **args)
 	}
 	if (data->nargs == 2)
 	{
-		// coger is_digit y is_int_size de philosophers y hacer atoi
+		if (is_long(args[1]))
+			exit(get_exit_status(args[1]));
+		ft_printf_fd("minishell: exit: %s: numeric argument required",
+			2, args[1]);
+		exit(255);
 	}
-
+	else if (data->nargs == 1)
+		exit(prev_exit);
 }
+
+

@@ -88,12 +88,28 @@ void	catch_exit_code(t_master *data);
 void	pwd(void);
 void	echo(t_master *data, char **args);
 void	print_env(void *nd);
-void	env(t_master *data);
 char	*get_pwd(void);
 void	cd(t_master *data, char **args);
+int		is_long(char *str);
+int		get_exit_status(char *str);
+int		str_equal(char *str1, char *str2);
+t_env	*init_env_data(char *key, char *value);
+void	free_env(void *env_data);
+void	update_env(t_master *data, char *key, char *value, int is_unset);
+void	exit_builtin(t_master *data, char **args);
+void	env(t_master *data);
+void	print_export(void *nd);
+int		is_valid_env_key(char *key);
+void	export_unset(t_master *data, char **args, int is_unset);
+void	export_unset_error(t_master *data, char *arg, int is_unset);
 
 // TESTING
 void	print_lst(void *nd);
 void	print_str_arr(char **arr);
+int		is_long_size(char *str);
+int		get_long_digits(char *str);
+int		check_limit(char *str);
+char	*get_key(char *arg);
+char	*get_value(char *arg);
 
 #endif

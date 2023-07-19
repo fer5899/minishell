@@ -14,3 +14,16 @@ void	file_error(char *str, int code)
 	perror(str);
 	exit(code);
 }
+
+void	export_unset_error(t_master *data, char *arg, int is_unset)
+{
+	char	*error;
+
+	if (is_unset)
+		error = "unset";
+	else
+		error = "export";
+	ft_printf_fd("minishell: %s: `%s\': not a valid identifier",
+		2, error, arg);
+	data->exit_code = 1;
+}

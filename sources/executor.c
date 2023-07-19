@@ -25,22 +25,19 @@ char	*get_pname(t_list *lst)
 
 void	exec_builtin(char *prog_name, char **args, t_master *data)
 {
-	int	pn_len;
-
-	pn_len = ft_strlen(prog_name);
-	if (pn_len == 6 && !ft_strncmp(prog_name, "export", 6))
-		return ; // exec export must NOT finish with exit()
-	else if (pn_len == 5 && !ft_strncmp(prog_name, "unset", 5))
-		return ; // exec unset must NOT finish with exit()
-	else if (pn_len == 2 && !ft_strncmp(prog_name, "cd", 2))
+	if (str_equal(prog_name, "export"))
+		export_unset(data, args, 0);
+	else if (str_equal(prog_name, "unset"))
+		export_unset(data, args, 1);
+	else if (str_equal(prog_name, "cd"))
 		cd(data, args);
-	else if (pn_len == 4 && !ft_strncmp(prog_name, "exit", 4))
-		return ;
-	else if (pn_len == 4 && !ft_strncmp(prog_name, "echo", 4))
+	else if (str_equal(prog_name, "exit"))
+		exit_builtin(data, args);
+	else if (str_equal(prog_name, "echo"))
 		echo(data, args);
-	else if (pn_len == 3 && !ft_strncmp(prog_name, "env", 3))
+	else if (str_equal(prog_name, "env"))
 		env(data);
-	else if (pn_len == 3 && !ft_strncmp(prog_name, "pwd", 3))
+	else if (str_equal(prog_name, "pwd"))
 		pwd();
 }
 
