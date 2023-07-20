@@ -10,9 +10,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <sys/stat.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
@@ -64,7 +65,7 @@ enum e_pipe_ends
 //Main
 
 void	fatal_error(void);
-void	file_error(char *str, int code);
+void	file_error(char *path, char *err_str, int code);
 void	init_pipes(t_master *data);
 void	executor(t_master *data);
 void	heredoc(t_master *data);

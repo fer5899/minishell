@@ -75,7 +75,7 @@ void	run_process(t_master *data, t_list *lst)
 	check_builtin(get_pname(lst), get_pargs(data, lst), data);
 	execve(get_prog_path(lst, get_path_arr(data)),
 		get_pargs(data, lst), get_env_arr(data));
-	exit(0);
+	exit(12);
 }
 
 void	executor(t_master *data)
@@ -100,7 +100,6 @@ void	executor(t_master *data)
 		find_next_cmd(&lst);
 	}
 	close_fds(data);
-	ft_printf("exit code caught\n");
 	catch_exit_code(data);
 }
 

@@ -38,11 +38,18 @@ int	is_filepath_valid(char *filepath)
 	if (filepath == NULL)
 		exit(0);
 	if (access(filepath, F_OK | X_OK) == 0)
-		return (1);
+	{
+		struct stat sb;
+
+		if (stat(filepath, &sb) == 0 && S_ISREG(sb.st_mode))
+			return (1);
+		file_error(filepath, "is a directory", 126);
+		return (0);
+	}
 	else if (errno == 13)
 	{
-		file_error(filepath, 126);
-		return (1);
+		file_error(filepath, "Permission denied", 126);
+		return (0);
 	}
 	else
 		return (0);
