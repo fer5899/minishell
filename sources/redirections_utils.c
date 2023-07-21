@@ -1,31 +1,31 @@
 #include "../minishell.h"
 
-void	close_fds(t_master *data)
+void	close_fds(t_master *d)
 {
 	int	idx;
 
 	idx = 0;
-	while (idx < data->n_pipes)
+	while (idx < d->n_pipes)
 	{
-		if (data->fds[idx][rd] > 0)
-			close(data->fds[idx][rd]);
-		if (data->fds[idx][wr] > 0)
-			close(data->fds[idx][wr]);
+		if (d->fds[idx][rd] > 0)
+			close(d->fds[idx][rd]);
+		if (d->fds[idx][wr] > 0)
+			close(d->fds[idx][wr]);
 		idx++;
 	}
 }
 
-char	*get_tmp_path(t_master *data)
+char	*get_tmp_path(t_master *d)
 {
 	char	*itoa;
 	char	*and_underscore;
 	char	*and_heredoc;
 	char	*and_extension;
 
-	itoa = ft_itoa(data->cmd_idx);
+	itoa = ft_itoa(d->cmd_idx);
 	and_underscore = ft_strjoin(itoa, "_");
 	free(itoa);
-	itoa = ft_itoa(data->heredoc_idx);
+	itoa = ft_itoa(d->heredoc_idx);
 	and_heredoc = ft_strjoin(and_underscore, itoa);
 	free(itoa);
 	free(and_underscore);
@@ -43,16 +43,16 @@ char	*add_nl(char *str)
 	return (str_nl);
 }
 
-void	input_heredoc(char *delim, int type, t_master *data)
+void	input_heredoc(char *delim, int type, t_master *d)
 {
 	int		tmp_fd;
 	char	*input;
 
-	tmp_fd = open(get_tmp_path(data), O_WRONLY | O_CREAT | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada heredoc
+	tmp_fd = open(get_tmp_path(d), O_WRONLY | O_CREAT | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada heredoc
 	input = add_nl(readline("> "));
 	type = 0; // BORRAR
 	// if (type == heredoc_)
-	// 	input = expand_env_vars(input, data);
+	// 	input = expand_env_vars(input, d);
 	while (ft_strlen(input) - 1 != ft_strlen(delim)
 		|| ft_strncmp(input, delim, ft_strlen(input) - 1) != 0)
 	{
@@ -60,7 +60,7 @@ void	input_heredoc(char *delim, int type, t_master *data)
 		free(input);
 		input = add_nl(readline("> "));
 		// if (type == heredoc_)
-		// 	input = expand_env_vars(input, data);
+		// 	input = expand_env_vars(input, d);
 	}
 	free(input);
 	close(tmp_fd);

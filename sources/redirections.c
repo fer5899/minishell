@@ -1,24 +1,24 @@
 #include "../minishell.h"
 
-void	set_redirection(int type, char *str, t_master *data)
+void	set_redirection(int type, char *str, t_master *d)
 {
 	int	fd;
 
 	if (type == in_redir_)
 	{
 		if (access(str, F_OK | R_OK) == -1)
-			file_error(str, 1);
+			file_error(d, str, "No such file or directory", 1);
 		fd = open(str, O_RDONLY);
 		dup2(fd, 0);
 		close(fd);
 	}
 	else if (type == heredoc_ || type == heredoc_q_)
-		heredoc(data);
+		heredoc(d);
 	else if (type == out_red_ || type == out_red_app_)
 	{
 		if (access(str, F_OK) == 0)
 			if (access(str, W_OK) == -1)
-				file_error(str, 1);
+				file_error(d, str, "Permission denied", 1);
 		if (type == out_red_)
 			fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else
@@ -28,66 +28,66 @@ void	set_redirection(int type, char *str, t_master *data)
 	}
 }
 
-void	get_all_input_heredoc(t_master *data)
+void	get_all_input_heredoc(t_master *d)
 {
 	int		type;
 	t_list	*lst;
 
-	lst = data->parsed_lst;
-	data->cmd_idx = 0;
-	data->heredoc_idx = 0;
+	lst = d->parsed_lst;
+	d->cmd_idx = 0;
+	d->heredoc_idx = 0;
 	while (lst != NULL)
 	{
 		type = ((t_data *) lst->content)->type;
 		if (type == pipe_)
 		{
-			data->cmd_idx++;
-			data->heredoc_idx = 0;
+			d->cmd_idx++;
+			d->heredoc_idx = 0;
 		}
 		if (type == heredoc_ || type == heredoc_q_)
 		{
-			input_heredoc(((t_data *) lst->content)->str, type, data);
-			data->heredoc_idx++;
+			input_heredoc(((t_data *) lst->content)->str, type, d);
+			d->heredoc_idx++;
 		}
 		lst = lst->next;
 	}
-	data->heredoc_idx = 0;
+	d->heredoc_idx = 0;
 }
 
-void	heredoc(t_master *data)
+void	heredoc(t_master *d)
 {
 	int		tmp_fd;
 
-	tmp_fd = open(get_tmp_path(data), O_RDONLY);
-	unlink(get_tmp_path(data));
+	tmp_fd = open(get_tmp_path(d), O_RDONLY);
+	unlink(get_tmp_path(d));
 	dup2(tmp_fd, 0);
 	close(tmp_fd);
-	data->heredoc_idx++;
+	d->heredoc_idx++;
 }
 
-void	set_pipe_redirection(t_master *data)
+void	set_pipe_redirection(t_master *d)
 {
-	if (data->n_pipes <= 0)
+	if (d->n_pipes <= 0)
 		return ;
-	if (data->cmd_idx >= 0 && data->cmd_idx < data->n_pipes)
-		dup2(data->fds[data->cmd_idx][wr], 1);
-	if (data->cmd_idx > 0 && data->cmd_idx <= data->n_pipes)
-		dup2(data->fds[data->cmd_idx - 1][rd], 0);
-	close_fds(data);
+	if (d->cmd_idx >= 0 && d->cmd_idx < d->n_pipes)
+		dup2(d->fds[d->cmd_idx][wr], 1);
+	if (d->cmd_idx > 0 && d->cmd_idx <= d->n_pipes)
+		dup2(d->fds[d->cmd_idx - 1][rd], 0);
+	close_fds(d);
 }
 
-void	set_all_redirections(t_master *data, t_list *lst)
+void	set_all_redirections(t_master *d, t_list *lst)
 {
 	t_data	*content;
 
-	set_pipe_redirection(data);
+	set_pipe_redirection(d);
 	while (lst != NULL)
 	{
 		content = ((t_data *)lst->content);
 		if (content->type == pipe_)
 			break ;
 		else if (content->type > prog_arg_)
-			set_redirection(content->type, content->str, data);
+			set_redirection(content->type, content->str, d);
 		lst = lst->next;
 	}
 }

@@ -1,23 +1,23 @@
 #include "../minishell.h"
 
-void	pwd(void)
+void	pwd(t_master *d)
 {
 	char	*pwd_str;
 
-	pwd_str = get_pwd();
+	pwd_str = get_pwd(d);
 	ft_printf("%s\n", pwd_str);
 	free(pwd_str);
-	exit(0);
+	free_master_exit(d, 0);
 }
 
-void	echo(t_master *data, char **args)
+void	echo(t_master *d, char **args)
 {
 	int	nl;
 
-	if (data->nargs == 1)
+	if (d->nargs == 1)
 	{
 		ft_printf("\n");
-		exit(0);
+		free_master_exit(d, 0);
 	}
 	nl = 1;
 	args++;
@@ -35,53 +35,54 @@ void	echo(t_master *data, char **args)
 	}
 	if (nl)
 		ft_printf("\n");
-	exit(0);
+	free_master_exit(d, 0);
 }
 
-void	cd(t_master *data, char **args)
+void	cd(t_master *d)
 {
 	char	*old_pwd;
 
-	if (data->nargs < 2)
+	if (d->nargs < 2)
 	{
-		data->exit_code = 0;
+		d->exit_code = 0;
 		return ;
 	}
-	old_pwd = get_pwd();
-	if (chdir(args[1]) == -1)
+	old_pwd = get_pwd(d);
+	if (chdir(d->args[1]) == -1)
 	{
 		ft_printf_fd("minishell: cd: %s: No such file or directory",
-			2, args[1]);
-		data->exit_code = 1;
+			2, d->args[1]);
+		d->exit_code = 1;
+		free(old_pwd);
 	}
 	else
 	{
-		data->exit_code = 0;
-		update_env(data, ft_strdup("OLDPWD"), old_pwd, 0);
-		update_env(data, ft_strdup("PWD"), get_pwd(), 0);
+		d->exit_code = 0;
+		update_env(d, ft_strdup("OLDPWD"), old_pwd, 0);
+		update_env(d, ft_strdup("PWD"), get_pwd(d), 0);
 	}
 }
 
-void	exit_builtin(t_master *data, char **args)
+void	exit_builtin(t_master *d)
 {
 	int	prev_exit;
 
-	prev_exit = data->exit_code;
-	if (data->nargs > 2)
+	prev_exit = d->exit_code;
+	if (d->nargs > 2)
 	{
 		ft_printf_fd("minishell: exit: too many arguments", 2);
-		exit(1);
+		free_master_exit(d, 1);
 	}
-	if (data->nargs == 2)
+	if (d->nargs == 2)
 	{
-		if (is_long(args[1]))
-			exit(get_exit_status(args[1]));
+		if (is_long(d->args[1]))
+			exit(get_exit_status(d->args[1]));
 		ft_printf_fd("minishell: exit: %s: numeric argument required",
-			2, args[1]);
-		exit(255);
+			2, d->args[1]);
+		free_master_exit(d, 255);
 	}
-	else if (data->nargs == 1)
-		exit(prev_exit);
+	else if (d->nargs == 1)
+		free_master_exit(d, prev_exit);
 }
 
 

@@ -11,10 +11,10 @@ int	str_equal(char *str1, char *str2)
 
 t_env	*init_env_data(char *key, char *value)
 {
-	t_env	*data;
+	t_env	*d;
 
-	data = (t_env *) ft_calloc(1, sizeof(t_env));
-	data->key = key;
-	data->value = value;
-	return (data);
+	d = (t_env *) ft_calloc(1, sizeof(t_env));
+	d->key = key;
+	d->value = value;
+	return (d);
 }

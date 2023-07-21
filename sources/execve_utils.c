@@ -13,14 +13,14 @@ char	*get_env_str(t_list *lst)
 	return (fullstr);
 }
 
-char	**get_env_arr(t_master *data)
+char	**get_env_arr(t_master *d)
 {
 	t_list	*env;
 	char	**env_arr;
 	int		env_len;
 	int		i;
 
-	env = data->env_lst;
+	env = d->env_lst;
 	env_len = ft_lstsize(env);
 	env_arr = (char **) ft_calloc(env_len + 1, sizeof(char *));
 	i = -1;
@@ -33,33 +33,33 @@ char	**get_env_arr(t_master *data)
 	return (env_arr);
 }
 
-int	is_filepath_valid(char *filepath)
+int	is_filepath_valid(t_master *d, char *filepath)
 {
 	if (filepath == NULL)
-		exit(0);
+		free_master_exit(d, 0);
 	if (access(filepath, F_OK | X_OK) == 0)
 	{
 		struct stat sb;
 
 		if (stat(filepath, &sb) == 0 && S_ISREG(sb.st_mode))
 			return (1);
-		file_error(filepath, "is a directory", 126);
+		file_error(d, filepath, "is a directory", 126);
 		return (0);
 	}
 	else if (errno == 13)
 	{
-		file_error(filepath, "Permission denied", 126);
+		file_error(d, filepath, "Permission denied", 126);
 		return (0);
 	}
 	else
 		return (0);
 }
 
-char	**get_path_arr(t_master *data)
+char	**get_path_arr(t_master *d)
 {
 	t_list *env;
 
-	env = data->env_lst;
+	env = d->env_lst;
 	if (env == NULL)
 		return (NULL);
 	while (env != NULL)
@@ -72,14 +72,14 @@ char	**get_path_arr(t_master *data)
 	return (NULL);
 }
 
-char	*get_prog_path(t_list *lst, char **path_arr)
+char	*get_prog_path(t_master *d, t_list *lst, char **path_arr)
 {
 	char	*add_slash;
 	char	*cmd;
 	char	*fullpath;
 
-	cmd = get_pname(lst);
-	if (is_filepath_valid(cmd) && (cmd[0] == '/' || cmd[0] == '.'))
+	cmd = get_pname(d, lst);
+	if (is_filepath_valid(d, cmd) && (cmd[0] == '/' || cmd[0] == '.'))
 		return (cmd);
 	if (path_arr != NULL)
 	{
@@ -88,13 +88,13 @@ char	*get_prog_path(t_list *lst, char **path_arr)
 			add_slash = ft_strjoin(*path_arr, "/");
 			fullpath = ft_strjoin(add_slash, cmd);
 			free(add_slash);
-			if (is_filepath_valid(fullpath))
+			if (is_filepath_valid(d, fullpath))
 				return (fullpath);
 			path_arr++;
 			free(fullpath);
 		}
 	}
-	//free everything
 	ft_printf_fd("minishell: %s: command not found\n", 2, cmd);
-	exit(127);
+	free_master_exit(d, 127);
+	return (NULL);
 }

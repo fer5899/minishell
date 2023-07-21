@@ -15,31 +15,31 @@ void	find_next_cmd(t_list **lst)
 	}
 }
 
-void	count_pipes(t_master *data)
+void	count_pipes(t_master *d)
 {
 	t_list	*lst;
 
-	data->n_pipes = 0;
-	lst = data->parsed_lst;
+	d->n_pipes = 0;
+	lst = d->parsed_lst;
 	while (lst != NULL)
 	{
 		if (((t_data *) lst->content)->type == pipe_)
-			data->n_pipes++;
+			d->n_pipes++;
 		lst = lst->next;
 	}
 }
 
-void	init_pipes(t_master *data)
+void	init_pipes(t_master *d)
 {
 	int		i;
 
 	i = 0;
-	if (data->n_pipes > MAX_PIPES)
-		fatal_error();
-	while (i < data->n_pipes)
+	if (d->n_pipes > MAX_PIPES)
+		fatal_error(d);
+	while (i < d->n_pipes)
 	{
-		if (pipe(data->fds[i]) == -1)
-			fatal_error();
+		if (pipe(d->fds[i]) == -1)
+			fatal_error(d);
 		i++;
 	}
 }
@@ -60,15 +60,17 @@ int	count_args(t_list *lst)
 	return (nargs);
 }
 
-char	**get_pargs(t_master *data, t_list *lst)
+void	get_pargs(t_master *d, t_list *lst)
 {
 	char	**args;
 	int		i;
 
-	data->nargs = count_args(lst);
-	args = (char **) ft_calloc(data->nargs + 1, sizeof(char *));
+	d->nargs = count_args(lst);
+	args = (char **) ft_calloc(d->nargs + 1, sizeof(char *));
+	if (!args)
+		fatal_error(d);
 	i = 0;
-	while (i < data->nargs && lst != NULL)
+	while (i < d->nargs && lst != NULL)
 	{
 		if (((t_data *) lst->content)->type == prog_arg_
 			|| ((t_data *) lst->content)->type == prog_name_)
@@ -79,5 +81,5 @@ char	**get_pargs(t_master *data, t_list *lst)
 		lst = lst->next;
 	}
 	args[i] = NULL;
-	return (args);
+	d->args = args;
 }
