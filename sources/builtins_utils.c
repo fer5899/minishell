@@ -9,7 +9,8 @@ void	print_env(void *nd)
 void	print_export(void *nd)
 {
 	if (((t_env *) nd)->value != NULL)
-		ft_printf("declare -x %s=\"%s\"\n", ((t_env *) nd)->key, ((t_env *) nd)->value);
+		ft_printf("declare -x %s=\"%s\"\n",
+			((t_env *) nd)->key, ((t_env *) nd)->value);
 	else
 		ft_printf("declare -x %s\n", ((t_env *) nd)->key);
 }

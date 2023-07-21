@@ -13,7 +13,7 @@ void	export_unset(t_master *data, char **args, int is_unset)
 
 	data->exit_code = 0;
 	if (data->nargs == 1 && !is_unset)
-		ft_lstiter(data->env_lst, print_export);
+		print_sorted_env(data->env_lst);
 	if (data->nargs > 1)
 	{
 		args++;

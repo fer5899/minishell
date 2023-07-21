@@ -103,6 +103,8 @@ void	print_export(void *nd);
 int		is_valid_env_key(char *key);
 void	export_unset(t_master *data, char **args, int is_unset);
 void	export_unset_error(t_master *data, char *arg, int is_unset);
+void	print_sorted_env(t_list *env);
+void	*dup_env_data(void *env_data);
 
 // TESTING
 void	print_lst(void *nd);
