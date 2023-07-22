@@ -209,12 +209,14 @@ t_split	*ft_split_parser(char *s)
 	t_split_param	*sp;
 	t_split			*split;
 	t_split			*result;
+	char			**str_1;
 
 	sp = ft_split_param_initialize(s);
 	split = (t_split *)malloc((sp->count_1 + 1) * sizeof(t_split));
 	if (!split)
 		exit (1);
 	result = split;
+	str_1 = sp->str_1;
 	while (sp->count_1 > 0)
 	{
 		while (*s == ' ' && *s)
@@ -254,6 +256,8 @@ t_split	*ft_split_parser(char *s)
 	*(sp->str_1) = 0;
 	split->str = *(sp->str_1);
 	result->error = sp->error;
+	free(sp);
+	free(str_1);
 	return (result);
 }
 
@@ -261,10 +265,10 @@ t_split	*ft_split_parser(char *s)
 //{
 //	t_split	*split;
 //	
-//	split = ft_split_parser("hola>>||que");
+//	split = ft_split_parser("hola|<");
 //	while (split->str)
 //	{
-//		printf("%s -- %c\n", split->str, split->char_type);
+//		printf("%s -- %c -- %d\n", split->str, split->char_type, split->error);
 //		split++;
 //	}
 //

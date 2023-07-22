@@ -21,7 +21,7 @@ SRC = minishell.c \
 #OBJ_DIR = minishell/objects
 #OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
-CC = gcc
+CC = gcc -g
 FLAGS = -Wall -Wextra -Werror
 OBJ = ${SRC:.c=.o}
 

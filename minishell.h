@@ -40,7 +40,6 @@ typedef struct s_split_param
 	char	**str_1;
 	char	*s;
 	char	char_type;
-	//char	**result;
 	int		red_l;
 	int		red_r;
 	int		pipe;
@@ -82,7 +81,7 @@ void		print_env_list(t_master *master);
 void		ft_free_env(void *env);
 void		ft_free_env_list(t_master *master);
 void		ft_free_data(void *data);
-void		ft_free_data_list(t_master *master);
+void		ft_free_data_list(t_list *parsed_lst);
 
 //Split parser - the first parser for single and double quotes
 t_split		*ft_split_parser(char *s);

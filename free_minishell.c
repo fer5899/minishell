@@ -26,7 +26,7 @@ void	ft_free_data(void *data)
 	free(tmp);
 }
 
-void	ft_free_data_list(t_master *master)
+void	ft_free_data_list(t_list *parsed_lst)
 {
-	ft_lstclear(&(master->parsed_lst), ft_free_data);
+	ft_lstclear(&(parsed_lst), ft_free_data);
 }
