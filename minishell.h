@@ -55,6 +55,22 @@ typedef struct s_split
 	int		error;
 }				t_split;
 
+typedef struct s_split_total
+{
+	t_split_param	*sp;
+	t_split			*split;
+	char			**str_1;
+}				t_split_total;
+
+typedef struct s_init_list
+{
+	int		arg_flag;
+	t_list	*list;
+	t_list	*new;
+	t_data	*data;
+	int		i;
+}				t_init_list;
+
 enum e_prs_type
 {
 	prog_name,
