@@ -1,6 +1,8 @@
 
 #include "minishell.h"
 
+char	*user;
+
 void	print_parsed_list(t_list *parsed_lst)
 {
 	t_list	*current;
@@ -159,6 +161,27 @@ void	ft_parse_input(char *command, t_master *master)
 	free(split);
 }
 
+void	handle_ctrl_c(int signum)
+{
+	(void)signum;
+	rl_replace_line("", 0);
+	printf("\n%s", user);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	handle_signals(t_master *master)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = handle_ctrl_c;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	sa.sa_handler = SIG_IGN; 
+	sigaction(SIGTSTP, &sa, NULL);
+}
+
 int	main(void)
 {
 	char		*command;
@@ -166,13 +189,21 @@ int	main(void)
 
 	master = inicialize_struct();
 	//print_env_list(master);
+	handle_signals(master);
 	while (1)
 	{
-		printf("%s", get_env_variable("USER", master));
+		user = get_env_variable("USER", master);
+		printf("%s", user);
 		command = readline("$ ");
 		if (ft_strlen(command) == 4 && ft_strncmp(command, "exit", 4) == 0)
 		{
 			free(command);
+			break ;
+		}
+		if (command == NULL)
+		{
+			printf("\nexit\n");
+			free (command);
 			break ;
 		}
 		else
