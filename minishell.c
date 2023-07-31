@@ -170,7 +170,7 @@ void	handle_ctrl_c(int signum)
 	rl_redisplay();
 }
 
-void	handle_signals(t_master *master)
+void	handle_signals(void)
 {
 	struct sigaction	sa;
 
@@ -189,7 +189,7 @@ int	main(void)
 
 	master = inicialize_struct();
 	//print_env_list(master);
-	handle_signals(master);
+	handle_signals();
 	while (1)
 	{
 		user = get_env_variable("USER", master);
