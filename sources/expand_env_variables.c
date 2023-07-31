@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 char    *substitude_value_for_key(char *str, char *value)
 {
@@ -36,7 +36,7 @@ char    *substitude_env_variable(char *key, char *str, t_master *master)
 		list = list->next;
 	}
     if (found == 0)
-        str = substitude_value_for_key(str, '\0');
+        str = substitude_value_for_key(str, "\0");
     return (str);
 }
 

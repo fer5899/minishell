@@ -36,7 +36,7 @@ void	exec_builtin(char *prog_name, t_master *d)
 	else if (str_equal(prog_name, "echo"))
 		echo(d, d->args);
 	else if (str_equal(prog_name, "env"))
-		env(d);
+		env_builtin(d);
 	else if (str_equal(prog_name, "pwd"))
 		pwd(d);
 }

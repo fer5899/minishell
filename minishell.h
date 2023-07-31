@@ -143,7 +143,7 @@ t_env	*init_env_data(char *key, char *value);
 void	free_env(void *env_data);
 void	update_env(t_master *d, char *key, char *value, int is_unset);
 void	exit_builtin(t_master *d);
-void	env(t_master *d);
+void	env_builtin(t_master *d);
 void	print_export(void *nd);
 int		is_valid_env_key(char *key);
 void	export_unset(t_master *d, char **args, int is_unset);

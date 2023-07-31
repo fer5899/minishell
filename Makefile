@@ -10,11 +10,12 @@ SRC = 	$(SRC_DIR)/executor.c $(SRC_DIR)/redirections.c $(SRC_DIR)/errors.c \
 		$(SRC_DIR)/executor_utils.c $(SRC_DIR)/execve_utils.c $(SRC_DIR)/redirections_utils.c \
 		$(SRC_DIR)/exits.c $(SRC_DIR)/builtins.c $(SRC_DIR)/builtins_utils.c \
 		$(SRC_DIR)/long_long_parse.c $(SRC_DIR)/executor_utils2.c $(SRC_DIR)/mem_manage.c \
-		$(SRC_DIR)/builtins2.c $(SRC_DIR)/builtins_utils2.c
+		$(SRC_DIR)/builtins2.c $(SRC_DIR)/builtins_utils2.c $(SRC_DIR)/expand_env_variables.c \
+		$(SRC_DIR)/free_minishell.c $(SRC_DIR)/ft_split_env.c $(SRC_DIR)/ft_split_parser_clean.c
 
 TEST_DIR = testing
 TEST_MAIN = $(TEST_DIR)/executor_test.c
-TEST_SRC =
+TEST_SRC = 
 
 OBJ=$(SRC:.c=.o)
 OBJ_TEST=$(TEST_SRC:.c=.o)

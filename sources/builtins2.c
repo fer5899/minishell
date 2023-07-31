@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	env(t_master *d)
+void	env_builtin(t_master *d)
 {
 	ft_lstiter(d->env_lst, print_env);
 	free_master_exit(d, 0);
