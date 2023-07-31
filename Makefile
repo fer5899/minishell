@@ -40,12 +40,14 @@ build_test: $(LIBFT) $(OBJ) $(TEST_MAIN)
 $(LIBFT):
 	@$(MAKE) -C Libft
 
-clean:
-	rm -f $(OBJ)
-	$(MAKE) -C Libft fclean
-	
-fclean: clean
-	rm -f $(NAME)
+clean:	
+		@rm -f ${OBJ}
+		@${MAKE} -C Libft clean
+
+fclean:	clean
+		@rm -f ${NAME} ${MINISHELL}
+		@rm -rf $(OBJ_DIR)
+		@${MAKE} -C Libft fclean
 
 re: fclean all
 
