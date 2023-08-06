@@ -164,22 +164,24 @@ void	ft_parse_input(char *command, t_master *master)
 void	handle_ctrl_c(int signum)
 {
 	(void)signum;
-	rl_replace_line("", 0);
-	printf("\n%s", user);
+	ft_printf("\n");
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
 void	handle_signals(void)
 {
-	struct sigaction	sa;
+	struct sigaction	sa_1;
+	struct sigaction	sa_2;
+	struct sigaction	sa_3;
 
-	sa.sa_handler = handle_ctrl_c;
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
-	sa.sa_handler = SIG_IGN; 
-	sigaction(SIGTSTP, &sa, NULL);
+	sa_1.sa_handler = handle_ctrl_c;
+	sigaction(SIGINT, &sa_1, NULL);
+	sa_2.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa_2, NULL);
+	sa_3.sa_handler = SIG_IGN; 
+	sigaction(SIGTSTP, &sa_3, NULL);
 }
 
 int	main(void)
@@ -193,8 +195,8 @@ int	main(void)
 	while (1)
 	{
 		user = get_env_variable("USER", master);
-		printf("%s", user);
-		command = readline("$ ");
+		user = ft_strjoin(user, "$ ");
+		command = readline(user);
 		if (ft_strlen(command) == 4 && ft_strncmp(command, "exit", 4) == 0)
 		{
 			free(command);
@@ -210,6 +212,7 @@ int	main(void)
 		{
 			ft_parse_input(command, master);
 			print_parsed_list(master->parsed_lst);
+			add_history(command);
 			if (master->parsed_lst)
 				ft_free_data_list(master->parsed_lst);
 			free(command);
