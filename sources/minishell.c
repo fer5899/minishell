@@ -15,6 +15,7 @@ void	print_parsed_list(t_list *parsed_lst)
 		printf("%s=%d - %c\n", data->str, data->type, data->char_type);
 		current = current->next;
 	}
+	printf("\n");
 }
 
 int	ft_type_of_data(char *str, int arg_flag)
@@ -170,7 +171,7 @@ void	handle_ctrl_c(int signum)
 	rl_redisplay();
 }
 
-void	handle_signals(t_master *master)
+void	handle_signals()
 {
 	struct sigaction	sa;
 
@@ -189,17 +190,12 @@ int	main(void)
 
 	master = inicialize_struct();
 	//print_env_list(master);
-	handle_signals(master);
+	handle_signals();
 	while (1)
 	{
 		user = get_env_variable("USER", master);
 		printf("%s", user);
 		command = readline("$ ");
-		if (ft_strlen(command) == 4 && ft_strncmp(command, "exit", 4) == 0)
-		{
-			free(command);
-			break ;
-		}
 		if (command == NULL)
 		{
 			printf("\nexit\n");
@@ -210,6 +206,8 @@ int	main(void)
 		{
 			ft_parse_input(command, master);
 			print_parsed_list(master->parsed_lst);
+			add_history(command);
+			executor(master);
 			if (master->parsed_lst)
 				ft_free_data_list(master->parsed_lst);
 			free(command);

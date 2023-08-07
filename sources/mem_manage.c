@@ -24,11 +24,12 @@ void	free_parsing(void *parsing_data)
 
 void	free_master_exit(t_master *d, int exit_code) // modify with final master struct
 {
-	ft_lstclear(&(d->env_lst), free_env);
-	ft_lstclear(&(d->parsed_lst), free_parsing);
-	if (d->args)
-		free(d->args);
-	free(d->fds);
-	free(d->pids);
+	(void) d;
+	// ft_lstclear(&(d->env_lst), free_env);
+	// ft_lstclear(&(d->parsed_lst), free_parsing);
+	// if (d->args)
+	// 	free(d->args);
+	// free(d->fds);
+	// free(d->pids);
 	exit(exit_code);
 }
