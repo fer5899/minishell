@@ -48,7 +48,8 @@ clean:
 		@${MAKE} -C Libft clean
 
 fclean:	clean
-		@rm -f ${NAME} ${MINISHELL}
+#		@rm -f ${NAME} ${MINISHELL} minisshell borrado
+		@rm -f ${NAME}
 		@rm -rf $(OBJ_DIR)
 		@${MAKE} -C Libft fclean
 

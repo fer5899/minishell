@@ -51,6 +51,7 @@ void	input_heredoc(char *delim, int type, t_master *d)
 	tmp_fd = open(get_tmp_path(d), O_WRONLY | O_CREAT | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada heredoc
 	input = add_nl(readline("> "));
 	type = 0; // BORRAR
+	type += 1; // Daba problemas Werror, borrar
 	// if (type == heredoc_)
 	// 	input = expand_env_vars(input, d);
 	while (ft_strlen(input) - 1 != ft_strlen(delim)
