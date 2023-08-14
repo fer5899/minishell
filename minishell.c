@@ -202,9 +202,16 @@ int	main(void)
 			free(command);
 			break ;
 		}
-		if (command == NULL)
+		//if (command == NULL)
+		//{
+		//	printf("\nexit\n");
+		//	free (command);
+		//	break ;
+		//}
+		if (!command) // Added for the MPANIC tester
 		{
-			printf("\nexit\n");
+			if (isatty(STDIN_FILENO))
+				write(2, "exit\n", 6);
 			free (command);
 			break ;
 		}
