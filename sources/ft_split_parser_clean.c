@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	ft_check_for_pipes(t_split_param *sp)
 {

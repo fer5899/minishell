@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 char    *substitude_value_for_key(char *str, char *value)
 {
