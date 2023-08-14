@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-char	*user;
+char	*command;
 
 void	print_parsed_list(t_list *parsed_lst)
 {
@@ -168,7 +168,9 @@ void	handle_ctrl_c(int signum)
 	ft_printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
+	//ft_printf("\n%s\n", command);
+	if (!command || ft_strncmp(command, "cat", 3) != 0) // Mejor soucion por ahora
+		rl_redisplay();
 }
 
 void	handle_signals(void)
@@ -187,7 +189,7 @@ void	handle_signals(void)
 
 int	main(void)
 {
-	char		*command;
+	char		*user;
 	t_master	*master;
 
 	master = inicialize_struct();
@@ -195,9 +197,10 @@ int	main(void)
 	handle_signals();
 	while (1)
 	{
-		user = get_env_variable("USER", master);
-		user = ft_strjoin(user, "$ ");
-		command = readline(user);
+		//user = get_env_variable("USER", master);
+		//user = ft_strjoin(user, "$ ");
+		//command = readline(user);
+		command = readline("minishell $");
 		//if (command == NULL)
 		//{
 		//	printf("\nexit\n");
@@ -214,9 +217,10 @@ int	main(void)
 		else
 		{
 			ft_parse_input(command, master);
-			print_parsed_list(master->parsed_lst);
+			//print_parsed_list(master->parsed_lst);
 			add_history(command);
 			executor(master);
+			//ft_printf("hola\n");
 			if (master->parsed_lst)
 				ft_free_data_list(master->parsed_lst);
 			free(command);
