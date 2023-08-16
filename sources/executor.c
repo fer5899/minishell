@@ -49,7 +49,7 @@ int	check_builtin(char *prog_name, t_master *d)
 			|| str_equal(prog_name, "cd") || str_equal(prog_name, "exit"))
 			return (exec_builtin(prog_name, d), 1);
 	}
-	else if (prog_name != NULL)
+	else if (prog_name != NULL && d->cmd_idx >= 0)
 	{
 		if (str_equal(prog_name, "export") || str_equal(prog_name, "unset")
 			|| str_equal(prog_name, "cd") || str_equal(prog_name, "exit"))

@@ -217,7 +217,7 @@ int	main(void)
 		else
 		{
 			ft_parse_input(command, master);
-			//print_parsed_list(master->parsed_lst);
+			// print_parsed_list(master->parsed_lst);
 			add_history(command);
 			executor(master);
 			//ft_printf("hola\n");
