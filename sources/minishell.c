@@ -189,7 +189,7 @@ void	handle_signals(void)
 
 int	main(void)
 {
-	char		*user;
+	// char		*user;
 	t_master	*master;
 
 	master = inicialize_struct();

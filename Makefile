@@ -1,10 +1,11 @@
 
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror
-CPPFLAGS= -ILibft -L /System/Volumes/Data/opt/vagrant/embedded/lib\
-			-I. -I /System/Volumes/Data/opt/vagrant/embedded/include
+# if there are readline errors execute 'brew install readline'
+CPPFLAGS= -I${HOME}/.brew/opt/readline/include
+LDFLAGS= -lreadline -L${HOME}/.brew/opt/readline/lib
 NAME=minishell
-#-L /System/Volumes/Data/opt/vagrant/embedded/lib
+#/sgoinfre/goinfre/Perso/fgomez-d/homebrew/Cellar/readline/8.2.1/ alternative path
 SRC_DIR = sources
 MAIN = $(SRC_DIR)/minishell.c
 SRC = 	$(SRC_DIR)/executor.c $(SRC_DIR)/redirections.c $(SRC_DIR)/errors.c \
@@ -29,7 +30,7 @@ LIBFT=$(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ) $(MAIN)
-	$(CC) $(CPPFLAGS) $(OBJ) $(MAIN) $(LIBFT) -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) $(MAIN) $(LIBFT) -o $(NAME) $(LDFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ 
@@ -38,7 +39,7 @@ test: build_test
 	@./test
 
 build_test: $(LIBFT) $(OBJ) $(TEST_MAIN)
-	@$(CC) $(CPPFLAGS) $(OBJ) $(TEST_MAIN) $(LIBFT) -lreadline -o test
+	@$(CC) $(OBJ) $(TEST_MAIN) $(LIBFT) -o test $(LDFLAGS)
 
 $(LIBFT):
 	@$(MAKE) -C Libft
