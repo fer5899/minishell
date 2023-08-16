@@ -27,9 +27,12 @@ char    *substitude_env_variable(char *key, char *str, t_master *master)
 	while (list)
 	{
 		env = (t_env *)list->content;
-		if (ft_strncmp(key, env->key, ft_strlen(env->key)) == 0)
+		if (str_equal(key, env->key) || str_equal(key, "?"))
 		{
-			str = substitude_value_for_key(str, env->value);
+			if (str_equal(key, "?"))
+				str = ft_itoa(master->exit_code);
+			else
+				str = substitude_value_for_key(str, env->value);
             found = 1;
 			break ;
 		}

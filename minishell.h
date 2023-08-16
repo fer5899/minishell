@@ -151,6 +151,7 @@ void	export_unset_error(t_master *d, char *arg, int is_unset);
 void	print_sorted_env(t_list *env);
 void	*dup_env_data(void *env_data);
 void	free_master_exit(t_master *d, int exit_code);
+void	in_redirection(char *str, t_master *d);
 // TESTING
 void	print_lst(void *nd);
 void	print_str_arr(char **arr);

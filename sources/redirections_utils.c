@@ -67,3 +67,16 @@ void	input_heredoc(char *delim, int type, t_master *d)
 	close(tmp_fd);
 }
 
+void	in_redirection(char *str, t_master *d)
+{
+	int	fd;
+
+	if (access(str, F_OK) == -1)
+			file_error(d, str, "No such file or directory", 1);
+		else if(access(str, R_OK) == -1)
+			file_error(d, str, "Permission denied", 1);
+		fd = open(str, O_RDONLY);
+		dup2(fd, 0);
+		close(fd);
+}
+

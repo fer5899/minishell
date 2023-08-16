@@ -94,7 +94,9 @@ char	*get_prog_path(t_master *d, t_list *lst, char **path_arr)
 			free(fullpath);
 		}
 	}
-	ft_printf_fd("minishell: %s: command not found\n", 2, cmd);
-	free_master_exit(d, 127);
-	return (NULL);
+	if (ft_strchr(cmd, '/'))
+		ft_printf_fd("minishell: %s: No such file or directory\n", 2, cmd);
+	else
+		ft_printf_fd("minishell: %s: command not found\n", 2, cmd);
+	return (free_master_exit(d, 127), NULL);
 }

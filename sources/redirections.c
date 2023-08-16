@@ -5,13 +5,7 @@ void	set_redirection(int type, char *str, t_master *d)
 	int	fd;
 
 	if (type == in_redir_)
-	{
-		if (access(str, F_OK | R_OK) == -1)
-			file_error(d, str, "No such file or directory", 1);
-		fd = open(str, O_RDONLY);
-		dup2(fd, 0);
-		close(fd);
-	}
+		in_redirection(str, d);
 	else if (type == heredoc_ || type == heredoc_q_)
 		heredoc(d);
 	else if (type == out_red_ || type == out_red_app_)
