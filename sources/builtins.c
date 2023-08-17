@@ -21,11 +21,7 @@ void	echo(t_master *d, char **args)
 	}
 	nl = 1;
 	args++;
-	if (ft_strlen(*args) == 2 && !ft_strncmp(*args, "-n", 2))
-	{
-		nl = 0;
-		args++;
-	}
+	get_echo_arg(&args, &nl);
 	while (*args != NULL)
 	{
 		ft_printf("%s", *args);

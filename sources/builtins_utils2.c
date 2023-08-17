@@ -71,3 +71,25 @@ void	print_sorted_env(t_list *env)
 	ft_lstiter(start, print_export);
 	ft_lstclear(&start, free_env);
 }
+
+void	get_echo_arg(char ***args, int *nl)
+{
+	char	*curr_letter;
+
+	while (**args != NULL)
+	{
+		if (ft_strncmp(**args, "-n", 2) != 0)
+			break ;
+		curr_letter = **args + 2;
+		while (*curr_letter != '\0')
+		{
+			if (*curr_letter != 'n')
+				break ;
+			curr_letter++;
+		}
+		if (*curr_letter != 'n' && *curr_letter != '\0')
+			break ;
+		*nl = 0;
+		*args += 1;
+	}
+}
