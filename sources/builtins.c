@@ -61,19 +61,21 @@ void	cd(t_master *d)
 
 void	exit_builtin(t_master *d)
 {
-	int	prev_exit;
+	int		prev_exit;
+	char	*trimmed;
 
 	prev_exit = d->exit_code;
+	// ft_printf("exit\n");
 	if (d->nargs > 2)
 	{
-		ft_printf_fd("minishell: exit: too many arguments", 2);
-		free_master_exit(d, 1);
+		ft_printf_fd("minishell: exit: too many arguments\n", 2);
 	}
 	if (d->nargs == 2)
 	{
-		if (is_long(d->args[1]))
-			exit(get_exit_status(d->args[1]));
-		ft_printf_fd("minishell: exit: %s: numeric argument required",
+		trimmed = ft_strtrim(d->args[1], " ");
+		if (is_long(trimmed))
+			exit(get_exit_status(trimmed));
+		ft_printf_fd("minishell: exit: %s: numeric argument required\n",
 			2, d->args[1]);
 		free_master_exit(d, 255);
 	}

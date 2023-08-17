@@ -45,17 +45,20 @@ int	check_builtin(char *prog_name, t_master *d)
 {
 	if (d->n_pipes == 0 && d->cmd_idx < 0 && prog_name != NULL)
 	{
-		if (str_equal(prog_name, "export") || str_equal(prog_name, "unset")
-			|| str_equal(prog_name, "cd") || str_equal(prog_name, "exit"))
+		if ((str_equal(prog_name, "export") && d->nargs != 1)
+			|| str_equal(prog_name, "unset") || str_equal(prog_name, "cd")
+			|| str_equal(prog_name, "exit"))
 			return (exec_builtin(prog_name, d), 1);
 	}
 	else if (prog_name != NULL && d->cmd_idx >= 0)
 	{
-		if (str_equal(prog_name, "export") || str_equal(prog_name, "unset")
-			|| str_equal(prog_name, "cd") || str_equal(prog_name, "exit"))
+		if ((str_equal(prog_name, "export") && d->nargs != 1)
+			|| str_equal(prog_name, "unset") || str_equal(prog_name, "cd")
+			|| str_equal(prog_name, "exit"))
 			free_master_exit(d, 0);
-		if (str_equal(prog_name, "echo") || str_equal(prog_name, "env")
-			|| str_equal(prog_name, "pwd"))
+		if (str_equal(prog_name, "echo") || 
+			(str_equal(prog_name, "export") && d->nargs == 1)
+			|| str_equal(prog_name, "env") || str_equal(prog_name, "pwd"))
 			return (exec_builtin(prog_name, d), 1);
 	}
 	return (0);

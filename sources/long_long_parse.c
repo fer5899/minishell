@@ -65,7 +65,7 @@ int	is_long_size(char *str)
 
 int	is_long(char *str)
 {
-	if (str == NULL)
+	if (str == NULL || *str == '\0')
 		return (0);
 	if (!is_long_size(str))
 		return (0);
@@ -89,9 +89,11 @@ int	get_exit_status(char *str)
 {
 	long long	num;
 	int			sign;
+	char		*orig;
 
 	if (str == NULL)
 		return (0);
+	orig = str;
 	num = 0;
 	sign = 1;
 	if (*str == '+' || *str == '-')
@@ -105,5 +107,9 @@ int	get_exit_status(char *str)
 		num = num * 10 + (*str - 48);
 		str++;
 	}
-	return (ft_abs((num * sign) % 256));
+	free(orig);
+	if (sign == 1)
+		return (num % 256);
+	else
+		return ((9223372036854775807 - num + 1) % 256);
 }

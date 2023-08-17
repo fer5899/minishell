@@ -70,6 +70,7 @@ void	print_sorted_env(t_list *env)
 	}
 	ft_lstiter(start, print_export);
 	ft_lstclear(&start, free_env);
+	exit(0);
 }
 
 void	get_echo_arg(char ***args, int *nl)
