@@ -35,12 +35,12 @@ char	**get_env_arr(t_master *d)
 
 int	is_filepath_valid(t_master *d, char *filepath)
 {
+	struct stat	sb;
+
 	if (filepath == NULL)
 		free_master_exit(d, 0);
 	if (access(filepath, F_OK | X_OK) == 0)
 	{
-		struct stat sb;
-
 		if (stat(filepath, &sb) == 0 && S_ISREG(sb.st_mode))
 			return (1);
 		file_error(d, filepath, "is a directory", 126);
