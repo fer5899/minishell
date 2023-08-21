@@ -112,7 +112,7 @@ enum e_pipe_ends
 void	fatal_error(t_master *d);
 void	file_error(t_master *d, char *path, char *err_str, int code);
 void	init_pipes(t_master *d);
-void	executor(t_master *d);
+int 	executor(t_master *d);
 void	heredoc(t_master *d);
 void	set_redirection(int type, char *str, t_master *d);
 void	set_all_redirections(t_master *d, t_list *lst);
@@ -130,7 +130,7 @@ char	*get_tmp_path(t_master *d);
 void	close_fds(t_master *d);
 void	input_heredoc(char *delim, int type, t_master *d);
 void	get_all_input_heredoc(t_master *d);
-void	catch_exit_code(t_master *d);
+int	    catch_exit_code(t_master *d);
 void	pwd(t_master *d);
 void	echo(t_master *d, char **args);
 void	print_env(void *nd);

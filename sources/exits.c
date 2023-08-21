@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	catch_exit_code(t_master *d)
+int	catch_exit_code(t_master *d)
 {
 	int	status;
 
@@ -16,4 +16,5 @@ void	catch_exit_code(t_master *d)
 		else if (WIFSTOPPED(status))
 			d->exit_code = WSTOPSIG(status);
 	}
+    return (d->exit_code);
 }

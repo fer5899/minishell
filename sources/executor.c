@@ -74,17 +74,19 @@ void	run_process(t_master *d, t_list *lst)
 	free_master_exit(d, 1);
 }
 
-void	executor(t_master *d)
+int	executor(t_master *d)
 {
 	t_list	*lst;
 
 	lst = d->parsed_lst;
+    if (lst == NULL)
+        return d->exit_code;
 	get_all_input_heredoc(d);
 	d->cmd_idx = -1;
 	count_pipes(d);
 	get_pargs(d, lst);
 	if (check_builtin(get_pname(d, lst), d))
-		return ;
+		return d->exit_code;
 	init_pipes(d);
 	while (lst != NULL)
 	{
@@ -97,6 +99,6 @@ void	executor(t_master *d)
 		find_next_cmd(&lst);
 	}
 	close_fds(d);
-	catch_exit_code(d);
+	return (catch_exit_code(d));
 }
 

@@ -84,16 +84,16 @@ void	*ft_initialize_parsed_lst_data_2(t_init_list *l, t_split *split)
 		|| l->data->type == 6)
 	{
 		free((split + l->i)->str);
-		if (l->data->type == 3 
-			&& ((split + l->i)->char_type == '\'' 
-				|| (split + l->i)->char_type == '"'))
+		if (l->data->type == 3
+			&& ((split + l->i + 1)->char_type == '\'' 
+				|| (split + l->i + 1)->char_type == '"'))
 			l->data->type = 4;
 		if (((split + l->i) + 1)->str == NULL 
-			|| ft_type_of_data(((split + l->i) + 1)->str, l->arg_flag) == 2 
-			|| ft_type_of_data(((split + l->i) + 1)->str, l->arg_flag) == 3
-			|| ft_type_of_data(((split + l->i) + 1)->str, l->arg_flag) == 5
-			|| ft_type_of_data(((split + l->i) + 1)->str, l->arg_flag) == 6
-			|| ft_type_of_data(((split + l->i) + 1)->str, l->arg_flag) == 7)
+			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 2 
+			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 3
+			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 5
+			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 6
+			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 7)
 			return (ft_syntax_error(l, (split + l->i)));
 		else
 		{
@@ -165,9 +165,9 @@ void	ft_parse_input(char *command, t_master *master)
 void	handle_ctrl_c(int signum)
 {
 	(void)signum;
+	rl_replace_line("", 0);
 	ft_printf("\n");
 	rl_on_new_line();
-	rl_replace_line("", 0);
 	//ft_printf("\n%s\n", command);
 	if (!command || ft_strncmp(command, "cat", 3) != 0) // Mejor soucion por ahora
 		rl_redisplay();
@@ -217,10 +217,9 @@ int	main(void)
 		else
 		{
 			ft_parse_input(command, master);
-			// print_parsed_list(master->parsed_lst);
+			print_parsed_list(master->parsed_lst);
 			add_history(command);
-			executor(master);
-			//ft_printf("hola\n");
+			master->exit_code = executor(master);
 			if (master->parsed_lst)
 				ft_free_data_list(master->parsed_lst);
 			free(command);
