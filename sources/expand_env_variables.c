@@ -19,7 +19,6 @@ char	*substitude_value_for_key(char *str, char *value, int key_len)
 	free(tmp);
 	tmp = ft_substr(str, i + key_len + 1, j);
 	new_str = ft_strjoin(tmp2, tmp);
-	free(str);
 	free(tmp);
 	free(tmp2);
 	return (new_str);
@@ -50,6 +49,7 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 	}
 	if (found == 0)
 		str = substitude_value_for_key(str, "\0", 0);
+	free(key);
 	return (str);
 }
 

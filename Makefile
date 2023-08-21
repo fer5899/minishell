@@ -30,7 +30,7 @@ LIBFT=$(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ) $(MAIN)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) $(MAIN) $(LIBFT) -o $(NAME) $(LDFLAGS)
+	@$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) $(MAIN) $(LIBFT) -o $(NAME) $(LDFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ 

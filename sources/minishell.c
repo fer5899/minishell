@@ -183,7 +183,7 @@ void	handle_signals(void)
 	sigaction(SIGINT, &sa_1, NULL);
 	sa_2.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa_2, NULL);
-	sa_3.sa_handler = SIG_IGN; 
+	sa_3.sa_handler = SIG_IGN;
 	sigaction(SIGTSTP, &sa_3, NULL);
 }
 
@@ -212,7 +212,7 @@ int	main(void)
 			if (isatty(STDIN_FILENO))
 				write(2, "exit\n", 6);
 			free (command);
-			break ;
+			exit(master->exit_code);
 		}
 		else
 		{
@@ -227,5 +227,5 @@ int	main(void)
 		}
 	}
 	ft_free_env_list(master);
-	return (0);
+	return (master->exit_code);
 }
