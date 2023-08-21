@@ -15,9 +15,13 @@ char	*substitude_value_for_key(char *str, char *value, int key_len)
 	j = i + key_len + 1;
 	while (str[j])
 		j++;
-	tmp2 = ft_substr(str, i + key_len + 1, j);
-	new_str = ft_strjoin(tmp, value);
-	new_str = ft_strjoin(new_str, tmp2);
+	tmp2 = ft_strjoin(tmp, value);
+	free(tmp);
+	tmp = ft_substr(str, i + key_len + 1, j);
+	new_str = ft_strjoin(tmp2, tmp);
+	free(str);
+	free(tmp);
+	free(tmp2);
 	return (new_str);
 }
 
