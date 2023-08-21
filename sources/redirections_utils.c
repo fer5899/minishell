@@ -48,20 +48,24 @@ void	input_heredoc(char *delim, int type, t_master *d)
 	int		tmp_fd;
 	char	*input;
 
-	tmp_fd = open(get_tmp_path(d), O_WRONLY | O_CREAT | O_TRUNC, 0600); // estudiar si es necesario un tmp file por cada heredoc
-	input = add_nl(readline("> "));
-	type = 0; // BORRAR
-	type += 1; // Daba problemas Werror, borrar
-	// if (type == heredoc_)
-	// 	input = expand_env_vars(input, d);
+	tmp_fd = open(get_tmp_path(d), O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	input = readline("> ");
+	if (!input)
+		return (close(tmp_fd), free(input));
+	if (type == heredoc_)
+		input = expand_env_variables(input, d);
+	input = add_nl(input);
 	while (ft_strlen(input) - 1 != ft_strlen(delim)
 		|| ft_strncmp(input, delim, ft_strlen(input) - 1) != 0)
 	{
 		write(tmp_fd, input, ft_strlen(input));
 		free(input);
-		input = add_nl(readline("> "));
-		// if (type == heredoc_)
-		// 	input = expand_env_vars(input, d);
+		input = readline("> ");
+		if (!input)
+			return (close(tmp_fd), free(input));
+		if (type == heredoc_)
+			input = expand_env_variables(input, d);
+		input = add_nl(input);
 	}
 	free(input);
 	close(tmp_fd);
@@ -72,11 +76,11 @@ void	in_redirection(char *str, t_master *d)
 	int	fd;
 
 	if (access(str, F_OK) == -1)
-			file_error(d, str, "No such file or directory", 1);
-		else if(access(str, R_OK) == -1)
-			file_error(d, str, "Permission denied", 1);
-		fd = open(str, O_RDONLY);
-		dup2(fd, 0);
-		close(fd);
+		file_error(d, str, "No such file or directory", 1);
+	else if (access(str, R_OK) == -1)
+		file_error(d, str, "Permission denied", 1);
+	fd = open(str, O_RDONLY);
+	dup2(fd, 0);
+	close(fd);
 }
 

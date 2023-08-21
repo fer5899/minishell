@@ -11,7 +11,6 @@ char	*substitude_value_for_key(char *str, char *value)
 		i++;
 	tmp = ft_substr(str, 0, i);
 	new_str = ft_strjoin(tmp, value);
-	//printf("str: %s\n", str);
 	return (new_str);
 }
 
@@ -56,10 +55,11 @@ char	*expand_env_variables(char *str, t_master *master)
 		if (str[i] == '$')
 		{
 			j = 0;
-			while (str[i + j + 1] && str[i + j + 1] != ' ' && str[i + j + 1] != '\'' && str[i + j + 1] != '"' && str[i + j + 1] != '$')
+			while (str[i + j + 1] && str[i + j + 1] != ' '
+				&& str[i + j + 1] != '\'' && str[i + j + 1] != '"'
+				&& str[i + j + 1] != '$')
 				j++;
 			key = ft_substr(str, i + 1, j);
-			//printf("key: %s - str: %s\n", key, str);
 			str = substitude_env_variable(key, str, master);
 			i += j;
 		}
