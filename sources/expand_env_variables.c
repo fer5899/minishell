@@ -1,17 +1,26 @@
 #include "../minishell.h"
 
-char	*substitude_value_for_key(char *str, char *value)
+char	*substitude_value_for_key(char *str, char *value, int key_len)
 {
 	char	*new_str;
 	char	*tmp;
+	char	*tmp2;
 	int		i;
+	int		j;
 
 	i = 0;
 	while (str[i] && str[i] != '$')
 		i++;
 	tmp = ft_substr(str, 0, i);
-	new_str = ft_strjoin(tmp, value);
-	//printf("str: %s\n", str);
+	j = i + key_len + 1;
+	while (str[j])
+		j++;
+	tmp2 = ft_strjoin(tmp, value);
+	free(tmp);
+	tmp = ft_substr(str, i + key_len + 1, j);
+	new_str = ft_strjoin(tmp2, tmp);
+	free(tmp);
+	free(tmp2);
 	return (new_str);
 }
 
@@ -32,14 +41,15 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 			if (str_equal(key, "?"))
 				str = ft_itoa(master->exit_code);
 			else
-				str = substitude_value_for_key(str, env->value);
+				str = substitude_value_for_key(str, env->value, ft_strlen(key));
 			found = 1;
 			break ;
 		}
 		list = list->next;
 	}
 	if (found == 0)
-		str = substitude_value_for_key(str, "\0");
+		str = substitude_value_for_key(str, "\0", 0);
+	free(key);
 	return (str);
 }
 
@@ -56,10 +66,11 @@ char	*expand_env_variables(char *str, t_master *master)
 		if (str[i] == '$')
 		{
 			j = 0;
-			while (str[i + j + 1] && str[i + j + 1] != ' ' && str[i + j + 1] != '\'' && str[i + j + 1] != '"' && str[i + j + 1] != '$')
+			while (str[i + j + 1] && str[i + j + 1] != ' '
+				&& str[i + j + 1] != '\'' && str[i + j + 1] != '"'
+				&& str[i + j + 1] != '$')
 				j++;
 			key = ft_substr(str, i + 1, j);
-			//printf("key: %s - str: %s\n", key, str);
 			str = substitude_env_variable(key, str, master);
 			i += j;
 		}
