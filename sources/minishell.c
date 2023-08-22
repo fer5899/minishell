@@ -200,7 +200,7 @@ int	main(void)
 		//user = get_env_variable("USER", master);
 		//user = ft_strjoin(user, "$ ");
 		//command = readline(user);
-		command = readline("minishell $");
+		command = readline("minishell$ ");
 		//if (command == NULL)
 		//{
 		//	printf("\nexit\n");
@@ -217,7 +217,7 @@ int	main(void)
 		else
 		{
 			ft_parse_input(command, master);
-			print_parsed_list(master->parsed_lst);
+			// print_parsed_list(master->parsed_lst);
 			add_history(command);
 			master->exit_code = executor(master);
 			if (master->parsed_lst)
