@@ -189,7 +189,6 @@ void	handle_signals(void)
 
 int	main(void)
 {
-	// char		*user;
 	t_master	*master;
 
 	master = inicialize_struct();
@@ -197,21 +196,12 @@ int	main(void)
 	handle_signals();
 	while (1)
 	{
-		//user = get_env_variable("USER", master);
-		//user = ft_strjoin(user, "$ ");
-		//command = readline(user);
 		command = readline("minishell$ ");
-		//if (command == NULL)
-		//{
-		//	printf("\nexit\n");
-		//	free (command);
-		//	break ;
-		//}
-		if (!command) // Added for the MPANIC tester
+		if (!command)
 		{
 			if (isatty(STDIN_FILENO))
-				write(2, "exit\n", 6);
-			free (command);
+				write(2, "exit\n", 5);
+			free(command);
 			exit(master->exit_code);
 		}
 		else
