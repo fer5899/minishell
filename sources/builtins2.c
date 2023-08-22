@@ -68,7 +68,7 @@ void	update_env(t_master *d, char *key, char *value, int is_unset)
 		if (str_equal(((t_env *)(lst->content))->key, key))
 		{
 			if (is_unset)
-				ft_lstdelone(ft_lstpop(&(d->env_lst), lst), free_env);
+				ft_lstdelone(ft_lstpop((d->env_lst), lst), free_env);
 			else
 			{
 				free(key);

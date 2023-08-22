@@ -67,6 +67,7 @@ static void	word_count_options(t_split_param *sp)
 		sp->quote_type = *(sp->s);
 		if (sp->is_word == 0 || sp->after_sep == 1)
 			sp->count_2++;
+		//sp->is_word = 1;
 	}
 	else if (*(sp->s) == sp->quote_type && sp->inside_quotes)
 	{
@@ -94,7 +95,7 @@ static int	word_count(t_split_param *sp)
 	while (*(sp->s))
 	{
 		word_count_options(sp);
-		//printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe);
+		printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe);
 		sp->s++;
 	}
 	if (sp->inside_quotes == 1)
@@ -295,28 +296,30 @@ t_split	*ft_split_parser(char *s)
 
 //printf("s:%c -- sep:%c -- char:%c -- ", *s, sp->sep_type, sp->char_type);
 
-//int main(void)
-//{
-//	t_split	*split;
-//	t_split	*split_free;
-//	char	*str;
-//
-//	split = ft_split_parser("ho>akds ho>'ad' a'dsjf'jdf");
-//	split_free = split;
-//	while (split->str)
-//	{
-//		if (split->error)
-//			printf("error: %d\n", split->error);
-//		printf("%s -- %c\n", split->str, split->char_type);
-//		str = split->str;
-//		free(str);
-//		split++;
-//	}
-//	free(split_free);
-//	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
-//	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
-//	//"ho 'la que '''\"\"'" - 4 Quote Error
-//	//"ho 'la que '''\"''''''\"''" - 5
-//
-//    //hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe
-//}
+int main(void)
+{
+	t_split	*split;
+	t_split	*split_free;
+	char	*str;
+
+	//split = ft_split_parser("ho>akds ho>'ad' a'dsjf'jdf");
+	split = ft_split_parser("cat>ho''la<< pe| o'no' >> y lo |'pe'te");
+	split_free = split;
+	while (split->str)
+	{
+		if (split->error)
+			printf("error: %d\n", split->error);
+		printf("%s -- %c\n", split->str, split->char_type);
+		str = split->str;
+		free(str);
+		split++;
+	}
+	free(split_free);
+	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
+	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
+	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'  'fin'al al'fin' c'o'c  'hol\"' pepe  '\"' " - 13
+	//"ho 'la que '''\"\"'" - 4 Quote Error
+	//"ho 'la que '''\"''''''\"''" - 5
+
+    //hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe
+}

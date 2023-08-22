@@ -165,9 +165,9 @@ void	ft_parse_input(char *command, t_master *master)
 void	handle_ctrl_c(int signum)
 {
 	(void)signum;
+	rl_on_new_line();
 	rl_replace_line("", 0);
 	ft_printf("\n");
-	rl_on_new_line();
 	//ft_printf("\n%s\n", command);
 	if (!command || ft_strncmp(command, "cat", 3) != 0) // Mejor soucion por ahora
 		rl_redisplay();
@@ -217,7 +217,7 @@ int	main(void)
 		else
 		{
 			ft_parse_input(command, master);
-			print_parsed_list(master->parsed_lst);
+			//print_parsed_list(master->parsed_lst);
 			add_history(command);
 			master->exit_code = executor(master);
 			if (master->parsed_lst)
