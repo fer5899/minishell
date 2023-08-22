@@ -78,6 +78,8 @@ void	exit_builtin(t_master *d)
 			ft_printf_fd("minishell: exit: too many arguments\n", 2);
 			d->exit_code = 1;
 		}
+		else
+			free_master_exit(d, get_exit_status(trimmed));
 	}
 	else if (d->nargs == 1)
 		free_master_exit(d, d->exit_code);
