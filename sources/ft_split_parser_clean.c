@@ -6,7 +6,10 @@ void	ft_check_for_pipes(t_split_param *sp)
 	if (*(sp->s) == '|')
 	{
 		if (sp->pipe == 0)
-			sp->is_word = 0;
+		{
+			sp->count_2++;
+			sp->is_word = 1;
+		}
 		sp->pipe++;
 		if (sp->pipe > 1)
 			sp->error = 1;
@@ -21,7 +24,10 @@ void	ft_check_for_redirections(t_split_param *sp)
 	if (*(sp->s) == '<')
 	{
 		if (sp->red_l == 0)
-			sp->is_word = 0;
+		{
+			sp->count_2++;
+			sp->is_word = 1;
+		}
 		sp->red_l++;
 		if (sp->red_l > 2)
 			sp->error = 1;
@@ -32,7 +38,10 @@ void	ft_check_for_redirections(t_split_param *sp)
 	if (*(sp->s) == '>')
 	{
 		if (sp->red_r == 0)
-			sp->is_word = 0;
+		{
+			sp->count_2++;
+			sp->is_word = 1;
+		}
 		sp->red_r++;
 		if (sp->red_r > 2)
 			sp->error = 1;
@@ -42,14 +51,12 @@ void	ft_check_for_redirections(t_split_param *sp)
 		sp->red_r = 0;
 }
 
-void	word_count_checks(t_split_param *sp)
+void	normal_character_check(t_split_param *sp)
 {
-	ft_check_for_redirections(sp);
-	ft_check_for_pipes(sp);
 	if (sp->after_sep == 1 && *(sp->s) != '>' 
 		&& *(sp->s) != '<' && *(sp->s) != '|')
 	{
-		sp->is_word = 0;
+		sp->is_word = 0; 
 		sp->after_sep = 0;
 	}
 	if ((sp->is_word == 0 && !sp->inside_quotes))
@@ -61,23 +68,27 @@ void	word_count_checks(t_split_param *sp)
 
 static void	word_count_options(t_split_param *sp)
 {
+	ft_check_for_redirections(sp);
+	ft_check_for_pipes(sp);
 	if ((*(sp->s) == '"' || *(sp->s) == '\'') && !sp->inside_quotes)
 	{
 		sp->inside_quotes = 1;
 		sp->quote_type = *(sp->s);
-		if (sp->is_word == 0 || sp->after_sep == 1)
-			sp->count_2++;
-		//sp->is_word = 1;
+		if (sp->after_sep == 1)
+			sp->after_sep = 0;
+		sp->count_2++;
+		sp->is_word = 1;
 	}
 	else if (*(sp->s) == sp->quote_type && sp->inside_quotes)
 	{
-		sp->inside_quotes = 0;
+		sp->inside_quotes = 0 ;
 		sp->quote_type = '\0';
+		sp->is_word = 0;
 	}
 	else if ((*(sp->s) == ' ' && !sp->inside_quotes))
 		sp->is_word = 0;
 	else
-		word_count_checks(sp);
+		normal_character_check(sp);	//not a special character
 }
 
 //printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe);
@@ -95,7 +106,7 @@ static int	word_count(t_split_param *sp)
 	while (*(sp->s))
 	{
 		word_count_options(sp);
-		printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe);
+		printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d - as:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe, sp->after_sep);
 		sp->s++;
 	}
 	if (sp->inside_quotes == 1)
@@ -303,7 +314,7 @@ int main(void)
 	char	*str;
 
 	//split = ft_split_parser("ho>akds ho>'ad' a'dsjf'jdf");
-	split = ft_split_parser("cat>ho''la<< pe| o'no' >> y lo |'pe'te");
+	split = ft_split_parser("cat>ho''la<< pe| o'no que mal' <> y lo |'pe'te");
 	split_free = split;
 	while (split->str)
 	{
