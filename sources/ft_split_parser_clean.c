@@ -149,6 +149,7 @@ int	ft_fill_array_extra(char *s, t_split_param *sp, char *str)
 	i = 0;
 	if (s[i] == '>' || s[i] == '<' || s[i] == '|')
 	{
+		sp->join_arg = 0;
 		while ((s[i] == sp->sep_type) && s[i])
 		{
 			str[i] = s[i];
@@ -176,7 +177,7 @@ static char	*fill_array(char *s, t_split_param *sp)
 
 	i = 0;
 	length = ft_fill_array_lenght(s, sp);
-	str = (char *)malloc((length + 1) * sizeof(char));
+	str = (char *)ft_calloc((length + 1), sizeof(char));
 	if (!str)
 		return (0);
 	if (sp->char_type == ' ')
@@ -197,7 +198,7 @@ t_split_param	*ft_split_param_initialize(char *s)
 {
 	t_split_param	*sp;
 
-	sp = (t_split_param *)malloc(sizeof(t_split_param));
+	sp = (t_split_param *)ft_calloc(1, sizeof(t_split_param));
 	if (!sp)
 		exit (1);
 	sp->s = s;
@@ -205,7 +206,8 @@ t_split_param	*ft_split_param_initialize(char *s)
 	sp->count_1 = word_count(sp);
 	sp->char_type = '\0';
 	sp->sep_type = '\0';
-	sp->str_1 = (char **)malloc((sp->count_1 + 1) * sizeof(char *));
+	sp->join_arg = 0;
+	sp->str_1 = (char **)ft_calloc((sp->count_1 + 1), sizeof(char *));
 	if (!sp->str_1)
 		exit (1);
 	return (sp);
@@ -234,9 +236,9 @@ t_split_total	*ft_inizialize_split_total(char *s)
 {
 	t_split_total	*st;
 
-	st = (t_split_total *)malloc(sizeof(t_split_total));
+	st = (t_split_total *)ft_calloc(1, sizeof(t_split_total));
 	st->sp = ft_split_param_initialize(s);
-	st->split = (t_split *)malloc((st->sp->count_1 + 1) * sizeof(t_split));
+	st->split = (t_split *)ft_calloc((st->sp->count_1 + 1), sizeof(t_split));
 	if (!st->split)
 		exit (1);
 	st->str_1 = st->sp->str_1;
@@ -275,29 +277,121 @@ void	ft_modify_count_and_sp(t_split_total *st)
 	st->split->str = *(st->sp->str_1);
 	st->split->error = 0;
 	st->split->char_type = st->sp->char_type;
+	st->split->join_arg = st->sp->join_arg;
 	st->sp->str_1++;
 	st->split++;
 	st->sp->count_1--;
 }
 
-t_split	*ft_split_parser(char *s)
+void	ft_split_all_words(char *s, t_split_total *st)
 {
-	t_split_total	*st;
-	t_split			*result;
-
-	st = ft_inizialize_split_total(s);
-	result = st->split;
-	while (st->sp->count_1 > 0)
+	while (*s)
 	{
-		while (*s == ' ' && *s)
-			s++;
+		if (*s == ' ' && *s)
+		{
+			st->sp->join_arg = 0;
+			while (*s == ' ' && *s)
+				s++;
+		}
+		else
+			st->sp->join_arg = 1;
 		ft_check_for_separators(st->sp, s);
 		*(st->sp->str_1) = fill_array(s, st->sp);
 		ft_modify_count_and_sp(st);
 		s = ft_skip_filled_word(st, s);
+		st->sp->join_arg = 1;
 	}
 	*(st->sp->str_1) = 0;
+}
+
+int	ft_count_args(t_split *split, int count)
+{
+	while (split->str)
+	{
+		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
+			&& (split + 1)->join_arg && (split + 1)->join_arg == 1)
+			count--;
+		split++;
+	}
+	return (count);
+}
+
+void	aux_join_args(t_split *split, t_split *result, t_master *master)
+{
+	char	*str_free;
+
+	str_free = result->str;
+	(split + 1)->str = expand_env_variables((split + 1)->str, master);
+	result->str = ft_strjoin(result->str, (split + 1)->str);
+	free(str_free);
+	free((split + 1)->str);
+	if (split->char_type == '\'' || (split + 1)->char_type == '\'' 
+		|| split->char_type == '"' || (split + 1)->char_type == '"')
+		result->char_type = '\'';
+	else
+		result->char_type = split->char_type;
+}
+
+void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *master)
+{
+	while (count >= 0)
+	{
+		*result = *split;
+		if (result->char_type != '\'')
+			result->str = expand_env_variables(result->str, master);
+		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
+			&& (split + 1) && (split + 1)->join_arg == 1)
+		{
+			while ((split + 1) && (split + 1)->join_arg == 1)
+			{
+				aux_join_args(split, result, master);
+				count--;
+				split++;
+			}
+			result++;
+		}
+		else
+		{
+			count--;
+			result++;
+		}	
+		split++;
+	}
+}
+
+t_split *ft_expand_and_join_args(t_split *split, int count, t_master *master)
+{
+	t_split *result;
+	t_split *result_last;
+	t_split *split_free;
+
+	split_free = split;
+	count = ft_count_args(split, count);
+	result = (t_split *)ft_calloc((count + 1), sizeof(t_split));
+	if (!result)
+		exit (1);
+	result_last = result;
+	ft_go_through_args(split, result, count, master);
+	free(split_free);
+	return (result_last);
+}
+
+t_split	*ft_split_parser(char *s, t_master *master)
+{
+	t_split_total	*st;
+	t_split			*result;
+	int				count;
+
+	st = ft_inizialize_split_total(s);
+	result = st->split;
+	count = st->sp->count_1;
+	//ft_printf("count = %d\n", st->sp->count_1);
+
+	ft_split_all_words(s, st);
+
 	st->split->str = *(st->sp->str_1);
+	if (st->sp->error == 0)
+		result = ft_expand_and_join_args(result, count, master);
 	result->error = st->sp->error;
 	free(st->sp);
 	free(st->str_1);
@@ -312,20 +406,24 @@ int main(void)
 	t_split	*split;
 	t_split	*split_free;
 	char	*str;
+	t_master	*master;
 
+	master = inicialize_struct();
 	//split = ft_split_parser("ho>akds ho>'ad' a'dsjf'jdf");
-	split = ft_split_parser("cat>ho''la<< pe| o'no que mal' <> y lo |'pe'te");
+	split = ft_split_parser("cat>ho''la<< pe| o'no que mal' \"$USER\"pepe '$USER' $USERa pepe\"$USER\" >> y lo |'pe'te", master);
 	split_free = split;
 	while (split->str)
 	{
 		if (split->error)
 			printf("error: %d\n", split->error);
-		printf("%s -- %c\n", split->str, split->char_type);
+		printf("%s -- %c -> %d\n", split->str, split->char_type, split->join_arg);
 		str = split->str;
 		free(str);
 		split++;
 	}
 	free(split_free);
+	ft_free_env_list(master);
+
 	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
 	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
 	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'  'fin'al al'fin' c'o'c  'hol\"' pepe  '\"' " - 13

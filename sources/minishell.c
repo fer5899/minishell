@@ -150,7 +150,7 @@ void	ft_parse_input(char *command, t_master *master)
 {
 	t_split	*split;
 
-	split = ft_split_parser(command);
+	split = ft_split_parser(command, master);
 	if (split->error == 1)
 	{
 		printf("%s\n", "Syntax error");
