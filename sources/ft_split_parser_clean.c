@@ -106,7 +106,7 @@ static int	word_count(t_split_param *sp)
 	while (*(sp->s))
 	{
 		word_count_options(sp);
-		printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d - as:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe, sp->after_sep);
+		//printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d - as:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe, sp->after_sep);
 		sp->s++;
 	}
 	if (sp->inside_quotes == 1)
@@ -338,7 +338,7 @@ void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *ma
 	{
 		*result = *split;
 		if (result->char_type != '\'')
-			result->str = expand_env_variables(result->str, master);
+			result->str = expand_env_variables(result->str , master);
 		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
 			&& (split + 1) && (split + 1)->join_arg == 1)
 		{
@@ -409,17 +409,25 @@ int main(void)
 	t_master	*master;
 
 	master = inicialize_struct();
+	int i = 0;
 	//split = ft_split_parser("ho>akds ho>'ad' a'dsjf'jdf");
-	split = ft_split_parser("cat>ho''la<< pe| o'no que mal' \"$USER\"pepe '$USER' $USERa pepe\"$USER\" >> y lo |'pe'te", master);
+	split = ft_split_parser("cat>ho''la<< pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
+	char *bash[] = {"cat", ">" ,"hola", "<<", "pe", "|", "ono que mal", "alvgomezpepe", "$USER", "alvgomez", "pepealvgomezalvgomez", "0hola", "hola0hola", "pepe?", "pepealvgomez?", "caca0alvgomez", "caca0a", ">>", "y", "lo", "|", "pete", NULL};
+	char *nota;
 	split_free = split;
 	while (split->str)
 	{
 		if (split->error)
 			printf("error: %d\n", split->error);
-		printf("%s -- %c -> %d\n", split->str, split->char_type, split->join_arg);
+		if (str_equal(split->str, bash[i]))
+			nota = "OK";
+		else
+			nota = "MAAL";
+		printf("%s -- %c -- %s --> %s\n", split->str, split->char_type, bash[i], nota);
 		str = split->str;
 		free(str);
 		split++;
+		i++;
 	}
 	free(split_free);
 	ft_free_env_list(master);
