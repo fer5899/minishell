@@ -31,7 +31,9 @@ char	*get_tmp_path(t_master *d)
 	free(and_underscore);
 	and_extension = ft_strjoin(and_heredoc, ".tmp");
 	free(and_heredoc);
-	return (and_extension);
+	and_heredoc = ft_strjoin("/tmp/", and_extension);
+	free(and_extension);
+	return (and_heredoc);
 }
 
 char	*add_nl(char *str)
@@ -41,34 +43,6 @@ char	*add_nl(char *str)
 	str_nl = ft_strjoin(str, "\n");
 	free(str);
 	return (str_nl);
-}
-
-void	input_heredoc(char *delim, int type, t_master *d)
-{
-	int		tmp_fd;
-	char	*input;
-
-	tmp_fd = open(get_tmp_path(d), O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	input = readline("> ");
-	if (!input)
-		return (close(tmp_fd), free(input));
-	if (type == heredoc_)
-		input = expand_env_variables(input, d);
-	input = add_nl(input);
-	while (ft_strlen(input) - 1 != ft_strlen(delim)
-		|| ft_strncmp(input, delim, ft_strlen(input) - 1) != 0)
-	{
-		write(tmp_fd, input, ft_strlen(input));
-		free(input);
-		input = readline("> ");
-		if (!input)
-			return (close(tmp_fd), free(input));
-		if (type == heredoc_)
-			input = expand_env_variables(input, d);
-		input = add_nl(input);
-	}
-	free(input);
-	close(tmp_fd);
 }
 
 void	in_redirection(char *str, t_master *d)

@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-char	*command;
+int	g_prog_state;
 
 void	print_parsed_list(t_list *parsed_lst)
 {
@@ -162,46 +162,25 @@ void	ft_parse_input(char *command, t_master *master)
 	free(split);
 }
 
-void	handle_ctrl_c(int signum)
-{
-	(void)signum;
-	rl_replace_line("", 0);
-	ft_printf("\n");
-	rl_on_new_line();
-	//ft_printf("\n%s\n", command);
-	if (!command || ft_strncmp(command, "cat", 3) != 0) // Mejor soucion por ahora
-		rl_redisplay();
-}
-
-void	handle_signals(void)
-{
-	struct sigaction	sa_1;
-	struct sigaction	sa_2;
-	struct sigaction	sa_3;
-
-	sa_1.sa_handler = handle_ctrl_c;
-	sigaction(SIGINT, &sa_1, NULL);
-	sa_2.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa_2, NULL);
-	sa_3.sa_handler = SIG_IGN;
-	sigaction(SIGTSTP, &sa_3, NULL);
-}
 
 int	main(void)
 {
 	t_master	*master;
+	char		*command;
 
 	master = inicialize_struct();
 	//print_env_list(master);
 	handle_signals();
 	while (1)
 	{
+		g_prog_state = basic_prompt;
 		command = readline("minishell$ ");
 		if (!command)
 		{
 			if (isatty(STDIN_FILENO))
 				write(2, "exit\n", 5);
 			free(command);
+			ft_free_env_list(master);
 			exit(master->exit_code);
 		}
 		else

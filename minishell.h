@@ -16,6 +16,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include <sys/stat.h>
+# include <termios.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
@@ -41,11 +42,14 @@ typedef struct s_master
 	char	**args;
 	int		fds[MAX_PIPES + 1][2];
 	pid_t	pids[MAX_PIPES + 1];
+	pid_t	heredoc_pid;
 	int		n_pipes;
 	int		cmd_idx;
 	int		heredoc_idx;
 	int		nargs;
 	int		exit_code;
+	int		state;
+	int		tmp_fd;
 }				t_master;
 
 typedef struct s_split_param
@@ -107,6 +111,15 @@ enum e_pipe_ends
 	wr,
 };
 
+enum e_g_prog_state
+{
+	basic_prompt,
+	in_heredoc,
+	in_heredoc_process,
+	exit_heredoc,
+	process,
+};
+
 //Main
 
 void		fatal_error(t_master *d);
@@ -152,7 +165,11 @@ void		*dup_env_data(void *env_data);
 void		free_master_exit(t_master *d, int exit_code);
 void		in_redirection(char *str, t_master *d);
 void		get_echo_arg(char ***args, int *nl);
-
+void		handle_signals(void);
+char		*add_nl(char *str);
+int			fork_heredoc(char *delim, int type, t_master *d);
+void		run_process(t_master *d, t_list *lst);
+void		exit_heredoc_after_signal(t_master *d);
 
 // TESTING
 void		print_lst(void *nd);
@@ -170,6 +187,7 @@ char		**ft_split_env(char const *s, char c);
 t_master	*inicialize_struct(void);
 char		*get_env_variable(char *key, t_master *master);
 void		print_env_list(t_master *master);
+t_list		*inicialize_env(void);
 
 //Free minishell
 void		ft_free_env(void *env);

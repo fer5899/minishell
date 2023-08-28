@@ -1,26 +1,16 @@
 #include "../minishell.h"
 
-char	*get_pname(t_master *d, t_list *lst)
-{
-	char	*prog_name;
-	t_data	*content;
+extern int	g_prog_state;
 
-	prog_name = NULL;
-	while (lst != NULL)
-	{
-		content = ((t_data *)lst->content);
-		if (content->type == pipe_)
-			break ;
-		if (content->type == prog_name_)
-		{
-			prog_name = content->str;
-			break ;
-		}
-		lst = lst->next;
-	}
-	if (prog_name == NULL)
-		free_master_exit(d, 0);
-	return (prog_name);
+void	launch_fork(t_master *d, t_list *lst)
+{
+	d->cmd_idx++;
+	g_prog_state = process;
+	d->pids[d->cmd_idx] = fork();
+	if (d->pids[d->cmd_idx] == -1)
+		fatal_error(d);
+	if (d->pids[d->cmd_idx] == 0)
+		run_process(d, lst);
 }
 
 void	exec_builtin(char *prog_name, t_master *d)
@@ -56,8 +46,8 @@ int	check_builtin(char *prog_name, t_master *d)
 			|| str_equal(prog_name, "unset") || str_equal(prog_name, "cd")
 			|| str_equal(prog_name, "exit"))
 			free_master_exit(d, 0);
-		if (str_equal(prog_name, "echo") || 
-			(str_equal(prog_name, "export") && d->nargs == 1)
+		if (str_equal(prog_name, "echo")
+			|| (str_equal(prog_name, "export") && d->nargs == 1)
 			|| str_equal(prog_name, "env") || str_equal(prog_name, "pwd"))
 			return (exec_builtin(prog_name, d), 1);
 	}
@@ -79,23 +69,20 @@ int	executor(t_master *d)
 	t_list	*lst;
 
 	lst = d->parsed_lst;
-    if (lst == NULL)
-        return d->exit_code;
+	if (lst == NULL)
+		return (d->exit_code);
 	get_all_input_heredoc(d);
+	if (g_prog_state == exit_heredoc)
+		return (1);
 	d->cmd_idx = -1;
 	count_pipes(d);
 	get_pargs(d, lst);
 	if (check_builtin(get_pname(d, lst), d))
-		return d->exit_code;
+		return (d->exit_code);
 	init_pipes(d);
 	while (lst != NULL)
 	{
-		d->cmd_idx++;
-		d->pids[d->cmd_idx] = fork();
-		if (d->pids[d->cmd_idx] == -1)
-			fatal_error(d);
-		if (d->pids[d->cmd_idx] == 0)
-			run_process(d, lst);
+		launch_fork(d, lst);
 		find_next_cmd(&lst);
 	}
 	close_fds(d);
