@@ -325,7 +325,9 @@ void	aux_join_args(t_split *split, t_split *result, t_master *master)
 	char	*str_free;
 
 	str_free = result->str;
-	(split + 1)->str = expand_env_variables((split + 1)->str, master);
+    if ((split + 1)->char_type != '\'')
+	    (split + 1)->str = expand_env_variables((split + 1)->str, master);
+    //Aqui falta el caso de $'\n'
 	result->str = ft_strjoin(result->str, (split + 1)->str);
 	free(str_free);
 	free((split + 1)->str);
@@ -340,7 +342,6 @@ void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *ma
 {
 	while (count >= 0 && split->str)
 	{
-		//ft_printf("HOLAAAAA\n");
 		//ft_printf("split->str: %d\n", *(split->str));
 		*result = *split;
 		if (split->char_type != '\'')
@@ -408,47 +409,47 @@ t_split	*ft_split_parser(char *s, t_master *master)
 
 //printf("s:%c -- sep:%c -- char:%c -- ", *s, sp->sep_type, sp->char_type);
 
-int main(void)
-{
-	t_split	*split;
-	t_split	*split_free;
-	char	*str;
-	char	*command;
-	t_master	*master;
-
-	master = inicialize_struct();
-	int i = 0;
-	split = ft_split_parser("hola $USER $caca", master);
-	//split = ft_split_parser("a$USER cat>ho''la<<  a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
-	//command = readline("here: ");
-	//split = ft_split_parser(command, master);
-	char *bash[] = {"aalvgomez", "cat", ">" ,"hola", "<<", "aalvgomez", "pe", "|", "ono que mal", "alvgomezpepe", "$USER", "alvgomez", "pepealvgomezalvgomez", "0hola", "hola0hola", "pepe?", "pepealvgomez?", "caca0alvgomez", "caca0a", ">>", "y", "lo", "|", "pete", NULL};
-	char *nota;
-	split_free = split;
-	while (split->str)
-	{
-		if (split->error)
-			printf("error: %d\n", split->error);
-		if (str_equal(split->str, bash[i]))
-			nota = "OK";
-		else
-			nota = "MAAL";
-		printf("%s -- %c -- %s --> %s\n", split->str, split->char_type, bash[i], nota);
-		//printf("%s -- %c\n", split->str, split->char_type);
-		str = split->str;
-		free(str);
-		split++;
-		i++;
-	}
-	free(split_free);
-	ft_free_env_list(master);
-	//free(command);
-
-	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
-	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
-	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'  'fin'al al'fin' c'o'c  'hol\"' pepe  '\"' " - 13
-	//"ho 'la que '''\"\"'" - 4 Quote Error
-	//"ho 'la que '''\"''''''\"''" - 5
-
-    //hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe
-}
+//int main(void)
+//{
+//	t_split	*split;
+//	t_split	*split_free;
+//	char	*str;
+//	char	*command;
+//	t_master	*master;
+//
+//	master = inicialize_struct();
+//	int i = 0;
+//	split = ft_split_parser("$'\n'", master);
+//	//split = ft_split_parser("a$USER cat>ho''la<<  a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
+//	//command = readline("here: ");
+//	//split = ft_split_parser(command, master);
+//	char *bash[] = {"aalvgomez", "cat", ">" ,"hola", "<<", "aalvgomez", "pe", "|", "ono que mal", "alvgomezpepe", "$USER", "alvgomez", "pepealvgomezalvgomez", "0hola", "hola0hola", "pepe?", "pepealvgomez?", "caca0alvgomez", "caca0a", ">>", "y", "lo", "|", "pete", NULL};
+//	char *nota;
+//	split_free = split;
+//	while (split->str)
+//	{
+//		if (split->error)
+//			printf("error: %d\n", split->error);
+//		//if (str_equal(split->str, bash[i]))
+//		//	nota = "OK";
+//		//else
+//		//	nota = "MAAL";
+//		//printf("%s -- %c -- %s --> %s\n", split->str, split->char_type, bash[i], nota);
+//		printf("%s -- %c\n", split->str, split->char_type);
+//		str = split->str;
+//		free(str);
+//		split++;
+//		i++;
+//	}
+//	free(split_free);
+//	ft_free_env_list(master);
+//	//free(command);
+//
+//	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
+//	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10
+//	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'  'fin'al al'fin' c'o'c  'hol\"' pepe  '\"' " - 13
+//	//"ho 'la que '''\"\"'" - 4 Quote Error
+//	//"ho 'la que '''\"''''''\"''" - 5
+//
+//    //hola que '' tal \"'estas. las''\" asdj 'cacc'   'hol\"' pepe
+//}

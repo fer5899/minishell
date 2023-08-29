@@ -107,7 +107,7 @@ void	*ft_initialize_parsed_lst_data_2(t_init_list *l, t_split *split)
 	return ((void *)1);
 }
 
-t_list	*initialize_parsed_lst(t_split *split, t_master *master)
+t_list	*initialize_parsed_lst(t_split *split)
 {
 	t_init_list	*l;
 	t_list		*list;
@@ -170,7 +170,7 @@ void	ft_parse_input(char *command, t_master *master)
 		master->parsed_lst = NULL;
 		return ;
 	}
-	master->parsed_lst = initialize_parsed_lst(split, master);
+	master->parsed_lst = initialize_parsed_lst(split);
 	free(split);
 }
 

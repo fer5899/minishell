@@ -72,7 +72,12 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 
 	found = 0;
 	list = master->env_lst;
-	//ft_printf("key: %s\n", key);
+    if (str_equal(key, "$") || str_equal(key, "$/"))
+    {
+	    ft_printf("key: %s\n", key);
+        free(key);
+        return (str);
+    }
 	while (list)
 	{
 		env = (t_env *)list->content;
@@ -112,6 +117,13 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 	return (str);
 }
 
+int is_it_just_a_dollar(char *str)
+{
+    if (str[0] == '$' && str[1] == '\0')
+        return (1);
+    return (0);
+}
+
 
 char	*expand_env_variables(char *str, t_master *master)
 {
@@ -122,7 +134,7 @@ char	*expand_env_variables(char *str, t_master *master)
 	//ft_printf("STR: %s\n", str);
 	while (is_there_a_char(str, '$') == 1)
 	{
-		i = 0;
+        i = 0;
 		while (str[i])
 		{
 			if (str[i] == '$')
@@ -134,6 +146,10 @@ char	*expand_env_variables(char *str, t_master *master)
 					j++;
 				if (str[i + 1] && str[i + 1] == '?')
 					key = ft_substr(str, i + 1, 1);
+                //else if (j == 0)
+                //    key = ft_strdup("$");
+                //else if (str[i + 1] == '/' && j == 1)
+                //    key = ft_strdup("$/");
 				else
 					key = ft_substr(str, i + 1, j);
 				//ft_printf("KEYYYY: %s\n", key);
@@ -143,6 +159,6 @@ char	*expand_env_variables(char *str, t_master *master)
 			}
 			i++;
 		}
-	}
+    }
 	return (str);
 }
