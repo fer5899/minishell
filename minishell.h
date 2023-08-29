@@ -172,6 +172,7 @@ char		*add_nl(char *str);
 int			fork_heredoc(char *delim, int type, t_master *d);
 void		run_process(t_master *d, t_list *lst);
 void		exit_heredoc_after_signal(t_master *d);
+void		check_wrong_chdir(char *path);
 
 // TESTING
 void		print_lst(void *nd);

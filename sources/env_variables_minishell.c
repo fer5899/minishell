@@ -43,7 +43,7 @@ char	*get_env_variable(char *key, t_master *master)
 	while (current)
 	{
 		env = (t_env *)current->content;
-		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
+		if (str_equal(env->key, key))
 		{
 			return (env->value);
 		}
