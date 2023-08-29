@@ -174,6 +174,30 @@ void	ft_parse_input(char *command, t_master *master)
 	free(split);
 }
 
+void	increment_shlvl(t_master *d)
+{
+	char	*shlvl_str;
+	int		prev_shlvl;
+
+	shlvl_str = get_env_variable("SHLVL", d);
+	if (is_long(shlvl_str))
+	{
+		prev_shlvl = ft_atoi(shlvl_str);
+		if (prev_shlvl >= 1000)
+		{
+			ft_printf_fd("%s (%d) too high, resetting to 1\n",
+				2, "minishell: warning: shell level", prev_shlvl + 1);
+			update_env(d, ft_strdup("SHLVL"), ft_strdup("1"), 0);
+		}
+		else if (prev_shlvl < -1)
+			update_env(d, ft_strdup("SHLVL"), ft_strdup("0"), 0);
+		else
+			update_env(d, ft_strdup("SHLVL"), ft_itoa(prev_shlvl + 1), 0);
+	}
+	else
+		update_env(d, ft_strdup("SHLVL"), ft_strdup("1"), 0);
+}
+
 
 int	main(void)
 {
@@ -181,7 +205,7 @@ int	main(void)
 	char		*command;
 
 	master = inicialize_struct();
-	//print_env_list(master);
+	increment_shlvl(master);
 	handle_signals();
 	while (1)
 	{
