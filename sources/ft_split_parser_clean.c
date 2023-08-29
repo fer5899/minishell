@@ -295,11 +295,14 @@ void	ft_split_all_words(char *s, t_split_total *st)
 		}
 		else
 			st->sp->join_arg = 1;
-		ft_check_for_separators(st->sp, s);
-		*(st->sp->str_1) = fill_array(s, st->sp);
-		ft_modify_count_and_sp(st);
-		s = ft_skip_filled_word(st, s);
-		st->sp->join_arg = 1;
+		if (*s)
+		{
+			ft_check_for_separators(st->sp, s);
+			*(st->sp->str_1) = fill_array(s, st->sp);
+			ft_modify_count_and_sp(st);
+			s = ft_skip_filled_word(st, s);
+			st->sp->join_arg = 1;
+		}
 	}
 	*(st->sp->str_1) = 0;
 }
@@ -308,6 +311,7 @@ int	ft_count_args(t_split *split, int count)
 {
 	while (split->str)
 	{
+		//ft_printf("split->str: %d\n", *(split->str));
 		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
 			&& (split + 1)->join_arg && (split + 1)->join_arg == 1)
 			count--;
@@ -334,11 +338,13 @@ void	aux_join_args(t_split *split, t_split *result, t_master *master)
 
 void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *master)
 {
-	while (count >= 0)
+	while (count >= 0 && split->str)
 	{
+		//ft_printf("HOLAAAAA\n");
+		//ft_printf("split->str: %d\n", *(split->str));
 		*result = *split;
-		if (result->char_type != '\'')
-			result->str = expand_env_variables(result->str , master);
+		if (split->char_type != '\'')
+			result->str = expand_env_variables(split->str , master);
 		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
 			&& (split + 1) && (split + 1)->join_arg == 1)
 		{
@@ -354,7 +360,7 @@ void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *ma
 		{
 			count--;
 			result++;
-		}	
+		}
 		split++;
 	}
 }
@@ -367,7 +373,9 @@ t_split *ft_expand_and_join_args(t_split *split, int count, t_master *master)
 
 	split_free = split;
 	count = ft_count_args(split, count);
+	//ft_printf("count: %d\n", count);
 	result = (t_split *)ft_calloc((count + 1), sizeof(t_split));
+	//ft_printf("CACA\n");
 	if (!result)
 		exit (1);
 	result_last = result;
@@ -388,7 +396,6 @@ t_split	*ft_split_parser(char *s, t_master *master)
 	//ft_printf("count = %d\n", st->sp->count_1);
 
 	ft_split_all_words(s, st);
-
 	st->split->str = *(st->sp->str_1);
 	if (st->sp->error == 0)
 		result = ft_expand_and_join_args(result, count, master);
@@ -406,13 +413,16 @@ int main(void)
 	t_split	*split;
 	t_split	*split_free;
 	char	*str;
+	char	*command;
 	t_master	*master;
 
 	master = inicialize_struct();
 	int i = 0;
-	//split = ft_split_parser("ho>akds ho>'ad' a'dsjf'jdf");
-	split = ft_split_parser("cat>ho''la<< pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
-	char *bash[] = {"cat", ">" ,"hola", "<<", "pe", "|", "ono que mal", "alvgomezpepe", "$USER", "alvgomez", "pepealvgomezalvgomez", "0hola", "hola0hola", "pepe?", "pepealvgomez?", "caca0alvgomez", "caca0a", ">>", "y", "lo", "|", "pete", NULL};
+	split = ft_split_parser("hola $USER $caca", master);
+	//split = ft_split_parser("a$USER cat>ho''la<<  a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
+	//command = readline("here: ");
+	//split = ft_split_parser(command, master);
+	char *bash[] = {"aalvgomez", "cat", ">" ,"hola", "<<", "aalvgomez", "pe", "|", "ono que mal", "alvgomezpepe", "$USER", "alvgomez", "pepealvgomezalvgomez", "0hola", "hola0hola", "pepe?", "pepealvgomez?", "caca0alvgomez", "caca0a", ">>", "y", "lo", "|", "pete", NULL};
 	char *nota;
 	split_free = split;
 	while (split->str)
@@ -424,6 +434,7 @@ int main(void)
 		else
 			nota = "MAAL";
 		printf("%s -- %c -- %s --> %s\n", split->str, split->char_type, bash[i], nota);
+		//printf("%s -- %c\n", split->str, split->char_type);
 		str = split->str;
 		free(str);
 		split++;
@@ -431,6 +442,7 @@ int main(void)
 	}
 	free(split_free);
 	ft_free_env_list(master);
+	//free(command);
 
 	//"hola que '' tal \"'estas. las''\" asdj 'cac c'    " - 7
 	//"hola que '' tal \"'estas. las''\" asdj 'cac\"\" c'    'hol\"' pepe  '\"' " - 10

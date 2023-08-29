@@ -14,7 +14,7 @@ int	is_there_a_char(char *str, char c)
 	return (0);
 }
 
-char	*substitude_value_for_key(char *str, char *value, int key_len, int value_len)
+char	*substitude_value_for_key(char *str, char *value, int key_len)
 {
 	char	*tmp;
 	char	*tmp2;
@@ -22,6 +22,7 @@ char	*substitude_value_for_key(char *str, char *value, int key_len, int value_le
 	int		j;
 
 	i = 0;
+	//ft_printf("str: %s ,value: %s, key_len: %d, value_len: %d\n", str, value, key_len, value_len);
 	//ft_printf("str: %s\n", str);
 	while (str[i] && str[i] != '$')
 		i++;
@@ -30,14 +31,20 @@ char	*substitude_value_for_key(char *str, char *value, int key_len, int value_le
 	j = i + key_len + 1;
 	//ft_printf("j: %d\n", j);
 	//ft_printf("value: %s\n", value);
-	tmp2 = ft_strjoin(tmp, value);
+	//ft_printf("tmp2 = tmp: %s , value: %s\n", tmp, value);
+	if (value == NULL)
+		tmp2 = ft_strdup(tmp);
+	else
+		tmp2 = ft_strjoin(tmp, value);
 	free(tmp);
 	//ft_printf("suma: %s\n", tmp2);
+	//ft_printf("tmp = tmp2: %s , str + j: %s, str: %s, j: %d\n", tmp2, str + j, str, j);
 	tmp = ft_strjoin(tmp2, (str + j));
 	//ft_printf("final: %s\n", (str + j));
 	//ft_printf("->new: %s\n------\n", tmp);
 	free(tmp2);
-	free(str);
+	//ft_printf("str: %s\n", str);
+	//free(str); //------> aqui esta el problema de valgrind
 	return (tmp);
 }
 
@@ -62,7 +69,6 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 	t_env	*env;
 	int		found;
 	char	*tmp;
-	//int		i;
 
 	found = 0;
 	list = master->env_lst;
@@ -77,7 +83,7 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 				tmp = ft_itoa(master->exit_code);
 				//tmp = ft_itoa(127);
 				//ft_printf("itoa: %s\n", tmp);
-				str = substitude_value_for_key(str, tmp, ft_strlen("?"), ft_strlen(tmp));
+				str = substitude_value_for_key(str, tmp, ft_strlen("?"));
 				free(tmp);
 			}
 			//else if (is_there_a_char(key, '?') == 1)
@@ -94,14 +100,14 @@ char	*substitude_env_variable(char *key, char *str, t_master *master)
 			//	free(tmp);
 			//}
 			else
-				str = substitude_value_for_key(str, env->value, ft_strlen(key), ft_strlen(env->value));
+				str = substitude_value_for_key(str, env->value, ft_strlen(key));
 			found = 1;
 			break ;
 		}
 		list = list->next;
 	}
 	if (found == 0)
-		str = substitude_value_for_key(str, NULL, ft_strlen(key), 0);
+		str = substitude_value_for_key(str, NULL, ft_strlen(key));
 	free(key);
 	return (str);
 }
