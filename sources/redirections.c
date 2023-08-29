@@ -22,43 +22,6 @@ void	set_redirection(int type, char *str, t_master *d)
 	}
 }
 
-void	get_all_input_heredoc(t_master *d)
-{
-	int		type;
-	t_list	*lst;
-
-	lst = d->parsed_lst;
-	d->cmd_idx = 0;
-	d->heredoc_idx = 0;
-	while (lst != NULL)
-	{
-		type = ((t_data *) lst->content)->type;
-		if (type == pipe_)
-		{
-			d->cmd_idx++;
-			d->heredoc_idx = 0;
-		}
-		if (type == heredoc_ || type == heredoc_q_)
-		{
-			input_heredoc(((t_data *) lst->content)->str, type, d);
-			d->heredoc_idx++;
-		}
-		lst = lst->next;
-	}
-	d->heredoc_idx = 0;
-}
-
-void	heredoc(t_master *d)
-{
-	int		tmp_fd;
-
-	tmp_fd = open(get_tmp_path(d), O_RDONLY);
-	unlink(get_tmp_path(d));
-	dup2(tmp_fd, 0);
-	close(tmp_fd);
-	d->heredoc_idx++;
-}
-
 void	set_pipe_redirection(t_master *d)
 {
 	if (d->n_pipes <= 0)

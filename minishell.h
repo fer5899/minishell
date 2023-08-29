@@ -16,6 +16,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include <sys/stat.h>
+# include <termios.h>
 
 # define MAX_PIPES 1000
 # define STD_IN_OUT MAX_PIPES
@@ -41,11 +42,14 @@ typedef struct s_master
 	char	**args;
 	int		fds[MAX_PIPES + 1][2];
 	pid_t	pids[MAX_PIPES + 1];
+	pid_t	heredoc_pid;
 	int		n_pipes;
 	int		cmd_idx;
 	int		heredoc_idx;
 	int		nargs;
 	int		exit_code;
+	int		state;
+	int		tmp_fd;
 }				t_master;
 
 typedef struct s_split_param
@@ -107,62 +111,74 @@ enum e_pipe_ends
 	wr,
 };
 
+enum e_g_prog_state
+{
+	basic_prompt,
+	in_heredoc,
+	in_heredoc_process,
+	exit_heredoc,
+	process,
+};
+
 //Main
 
-void	fatal_error(t_master *d);
-void	file_error(t_master *d, char *path, char *err_str, int code);
-void	init_pipes(t_master *d);
-int 	executor(t_master *d);
-void	heredoc(t_master *d);
-void	set_redirection(int type, char *str, t_master *d);
-void	set_all_redirections(t_master *d, t_list *lst);
-void	set_pipe_redirection(t_master *d);
-char	*expand_env_vars(char *str, t_master *d); // sustituir por función de álvaro
-void	find_next_cmd(t_list **lst);
-void	init_pipes(t_master *d);
-void	count_pipes(t_master *d);
-void	get_pargs(t_master *d, t_list *lst);
-char	*get_pname(t_master *d, t_list *lst);
-char	**get_path_arr(t_master *d);
-char	*get_prog_path(t_master *d, t_list *lst, char **path_arr);
-char	**get_env_arr(t_master *d);
-char	*get_tmp_path(t_master *d);
-void	close_fds(t_master *d);
-void	input_heredoc(char *delim, int type, t_master *d);
-void	get_all_input_heredoc(t_master *d);
-int	    catch_exit_code(t_master *d);
-void	pwd(t_master *d);
-void	echo(t_master *d, char **args);
-void	print_env(void *nd);
-char	*get_pwd(t_master *d);
-void	cd(t_master *d);
-int		is_long(char *str);
-int		get_exit_status(char *str);
-int		str_equal(char *str1, char *str2);
-t_env	*init_env_data(char *key, char *value);
-void	free_env(void *env_data);
-void	update_env(t_master *d, char *key, char *value, int is_unset);
-void	exit_builtin(t_master *d);
-void	env_builtin(t_master *d);
-void	print_export(void *nd);
-int		is_valid_env_key(char *key);
-void	export_unset(t_master *d, char **args, int is_unset);
-void	export_unset_error(t_master *d, char *arg, int is_unset);
-void	print_sorted_env(t_list *env);
-void	*dup_env_data(void *env_data);
-void	free_master_exit(t_master *d, int exit_code);
-void	in_redirection(char *str, t_master *d);
-void	get_echo_arg(char ***args, int *nl);
-
+void		fatal_error(t_master *d);
+void		file_error(t_master *d, char *path, char *err_str, int code);
+void		init_pipes(t_master *d);
+int			executor(t_master *d);
+void		heredoc(t_master *d);
+void		set_redirection(int type, char *str, t_master *d);
+void		set_all_redirections(t_master *d, t_list *lst);
+void		set_pipe_redirection(t_master *d);
+void		find_next_cmd(t_list **lst);
+void		init_pipes(t_master *d);
+void		count_pipes(t_master *d);
+void		get_pargs(t_master *d, t_list *lst);
+char		*get_pname(t_master *d, t_list *lst);
+char		**get_path_arr(t_master *d);
+char		*get_prog_path(t_master *d, t_list *lst, char **path_arr);
+char		**get_env_arr(t_master *d);
+char		*get_tmp_path(t_master *d);
+void		close_fds(t_master *d);
+void		input_heredoc(char *delim, int type, t_master *d);
+void		get_all_input_heredoc(t_master *d);
+int			catch_exit_code(t_master *d);
+void		pwd(t_master *d);
+void		echo(t_master *d, char **args);
+void		print_env(void *nd);
+char		*get_pwd(t_master *d);
+void		cd(t_master *d);
+int			is_long(char *str);
+int			get_exit_status(char *str);
+int			str_equal(char *str1, char *str2);
+t_env		*init_env_data(char *key, char *value);
+void		free_env(void *env_data);
+void		update_env(t_master *d, char *key, char *value, int is_unset);
+void		exit_builtin(t_master *d);
+void		env_builtin(t_master *d);
+void		print_export(void *nd);
+int			is_valid_env_key(char *key);
+void		export_unset(t_master *d, char **args, int is_unset);
+void		export_unset_error(t_master *d, char *arg, int is_unset);
+void		print_sorted_env(t_list *env);
+void		*dup_env_data(void *env_data);
+void		free_master_exit(t_master *d, int exit_code);
+void		in_redirection(char *str, t_master *d);
+void		get_echo_arg(char ***args, int *nl);
+void		handle_signals(void);
+char		*add_nl(char *str);
+int			fork_heredoc(char *delim, int type, t_master *d);
+void		run_process(t_master *d, t_list *lst);
+void		exit_heredoc_after_signal(t_master *d);
 
 // TESTING
-void	print_lst(void *nd);
-void	print_str_arr(char **arr);
-int		is_long_size(char *str);
-int		get_long_digits(char *str);
-int		check_limit(char *str);
-char	*get_key(char *arg);
-char	*get_value(char *arg);
+void		print_lst(void *nd);
+void		print_str_arr(char **arr);
+int			is_long_size(char *str);
+int			get_long_digits(char *str);
+int			check_limit(char *str);
+char		*get_key(char *arg);
+char		*get_value(char *arg);
 
 //Split env
 char		**ft_split_env(char const *s, char c);
@@ -171,6 +187,7 @@ char		**ft_split_env(char const *s, char c);
 t_master	*inicialize_struct(void);
 char		*get_env_variable(char *key, t_master *master);
 void		print_env_list(t_master *master);
+t_list		*inicialize_env(void);
 
 //Free minishell
 void		ft_free_env(void *env);
