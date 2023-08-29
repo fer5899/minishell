@@ -44,7 +44,7 @@ char	*substitude_value_for_key(char *str, char *value, int key_len)
 	//ft_printf("->new: %s\n------\n", tmp);
 	free(tmp2);
 	//ft_printf("str: %s\n", str);
-	//free(str); //------> aqui esta el problema de valgrind
+	free(str); //------> aqui esta el problema de valgrind
 	return (tmp);
 }
 

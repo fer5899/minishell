@@ -68,6 +68,7 @@ typedef struct s_split_param
 	char	sep_type;
 	int		after_sep;
 	int		error;
+	int		join_arg;
 }				t_split_param;
 
 typedef struct s_split
@@ -75,6 +76,7 @@ typedef struct s_split
 	char	*str;
 	char	char_type;
 	int		error;
+	int		join_arg;
 }				t_split;
 
 typedef struct s_split_total
@@ -196,7 +198,7 @@ void		ft_free_data(void *data);
 void		ft_free_data_list(t_list *parsed_lst);
 
 //Split parser - the first parser for single and double quotes
-t_split		*ft_split_parser(char *s);
+t_split		*ft_split_parser(char *s, t_master *master);
 
 
 // Expand env variables
