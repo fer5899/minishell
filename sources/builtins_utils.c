@@ -17,15 +17,20 @@ void	print_export(void *nd)
 
 int	is_valid_env_key(char *key)
 {
-	if (key == NULL)
+	int	key_len;
+	int	i;
+
+	key_len = ft_strlen(key);
+	i = -1;
+	if (key == NULL || key_len < 1)
 		return (0);
-	if (ft_isdigit(*key))
+	if (ft_isdigit(key[0]))
 		return (0);
-	while (*key != '\0')
+	while (++i < key_len)
 	{
-		if (!(ft_isalnum(*key) || *key == '_'))
-			return (0);
-		key++;
+		if (!(ft_isalnum(key[i]) || key[i] == '_'))
+			if (!(i == key_len - 1 && key[i] == '+'))
+				return (0);
 	}
 	return (1);
 }

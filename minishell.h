@@ -174,6 +174,8 @@ void		run_process(t_master *d, t_list *lst);
 void		exit_heredoc_after_signal(t_master *d);
 void		check_wrong_chdir(char *path);
 int			out_redirection_check(char *path);
+int			is_export_append(char **key);
+void		update_or_append(t_list *lst, char *key, char *value, int is_append);
 
 // TESTING
 void		print_lst(void *nd);

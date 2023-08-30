@@ -60,8 +60,10 @@ char	*get_pwd(t_master *d)
 void	update_env(t_master *d, char *key, char *value, int is_unset)
 {
 	t_list	*lst;
+	int		is_append;
 
-
+	if (!is_unset)
+		is_append = is_export_append(&key);
 	lst = d->env_lst;
 	while (lst != NULL)
 	{
@@ -71,9 +73,7 @@ void	update_env(t_master *d, char *key, char *value, int is_unset)
 				ft_lstdelone(ft_lstpop(&(d->env_lst), lst), free_env);
 			else
 			{
-				free(key);
-				free(((t_env *)(lst->content))->value);
-				((t_env *)(lst->content))->value = value;
+				update_or_append(lst, key, value, is_append);
 				return ;
 			}
 		}
