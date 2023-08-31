@@ -1,15 +1,15 @@
 #include "../minishell.h"
 
-void	fatal_error(t_master *d)
+void	fatal_error()
 {
 	ft_printf_fd("FATAL ERROR\n", 2);
-	free_master_exit(d, 1);
+	exit(1);
 }
 
-void	file_error(t_master *d, char *path, char *err_str, int code)
+void	file_error(char *path, char *err_str, int code)
 {
 	ft_printf_fd("minishell: %s: %s\n", 2, path, err_str);
-	free_master_exit(d, code);
+	exit(code);
 }
 
 void	export_unset_error(t_master *d, char *arg, int is_unset)

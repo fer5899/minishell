@@ -31,6 +31,7 @@ t_master	*inicialize_struct(void)
 
 	master = ft_calloc(1, sizeof(t_master));
 	master->env_lst = inicialize_env();
+	master->args = NULL;
 	return (master);
 }
 

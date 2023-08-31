@@ -124,8 +124,8 @@ enum e_g_prog_state
 
 // Main
 
-void		fatal_error(t_master *d);
-void		file_error(t_master *d, char *path, char *err_str, int code);
+void		fatal_error();
+void		file_error(char *path, char *err_str, int code);
 void		init_pipes(t_master *d);
 int			executor(t_master *d);
 void		heredoc(t_master *d);
@@ -136,9 +136,9 @@ void		find_next_cmd(t_list **lst);
 void		init_pipes(t_master *d);
 void		count_pipes(t_master *d);
 void		get_pargs(t_master *d, t_list *lst);
-char		*get_pname(t_master *d, t_list *lst);
+char		*get_pname(t_list *lst);
 char		**get_path_arr(t_master *d);
-char		*get_prog_path(t_master *d, t_list *lst, char **path_arr);
+char		*get_prog_path(t_list *lst, char **path_arr);
 char		**get_env_arr(t_master *d);
 char		*get_tmp_path(t_master *d);
 void		close_fds(t_master *d);
@@ -164,8 +164,7 @@ void		export_unset(t_master *d, char **args, int is_unset);
 void		export_unset_error(t_master *d, char *arg, int is_unset);
 void		print_sorted_env(t_list *env);
 void		*dup_env_data(void *env_data);
-void		free_master_exit(t_master *d, int exit_code);
-void		in_redirection(char *str, t_master *d);
+void		in_redirection(char *str);
 void		get_echo_arg(char ***args, int *nl);
 void		handle_signals(void);
 char		*add_nl(char *str);
@@ -177,6 +176,8 @@ int			out_redirection_check(char *path);
 int			is_export_append(char **key);
 void		update_or_append(t_list *lst, char *key, char *value, int is_append);
 int			is_long_size(char *str);
+void		free_pargs(t_master *d);
+void		free_master_and_exit(t_master *d, int exit_code);
 
 // TESTING
 void		print_lst(void *nd);
@@ -197,7 +198,7 @@ t_list		*inicialize_env(void);
 
 // Free minishell
 void		ft_free_env(void *env);
-void		ft_free_env_list(t_master *master);
+int			ft_free_env_list(t_master *master);
 void		ft_free_data(void *data);
 void		ft_free_data_list(t_list *parsed_lst);
 

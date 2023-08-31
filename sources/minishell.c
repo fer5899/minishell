@@ -203,6 +203,7 @@ int	main(void)
 {
 	t_master	*master;
 	char		*command;
+	int			exit_code;
 
 	master = inicialize_struct();
 	increment_shlvl(master);
@@ -216,8 +217,8 @@ int	main(void)
 			if (isatty(STDIN_FILENO))
 				write(2, "exit\n", 5);
 			free(command);
-			ft_free_env_list(master);
-			exit(master->exit_code);
+			exit_code = ft_free_env_list(master);
+			exit(exit_code);
 		}
 		else
 		{
@@ -232,6 +233,6 @@ int	main(void)
 			free(command);
 		}
 	}
-	ft_free_env_list(master);
-	return (master->exit_code);
+	exit_code = ft_free_env_list(master);
+	return (exit_code);
 }

@@ -45,14 +45,14 @@ char	*add_nl(char *str)
 	return (str_nl);
 }
 
-void	in_redirection(char *str, t_master *d)
+void	in_redirection(char *str)
 {
 	int	fd;
 
 	if (access(str, F_OK) == -1)
-		file_error(d, str, "No such file or directory", 1);
+		file_error(str, "No such file or directory", 1);
 	else if (access(str, R_OK) == -1)
-		file_error(d, str, "Permission denied", 1);
+		file_error(str, "Permission denied", 1);
 	fd = open(str, O_RDONLY);
 	dup2(fd, 0);
 	close(fd);

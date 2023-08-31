@@ -33,22 +33,22 @@ char	**get_env_arr(t_master *d)
 	return (env_arr);
 }
 
-int	is_filepath_valid(t_master *d, char *filepath)
+int	is_filepath_valid(char *filepath)
 {
 	struct stat	sb;
 
 	if (filepath == NULL)
-		free_master_exit(d, 0);
+		exit(0);
 	if (access(filepath, F_OK | X_OK) == 0)
 	{
 		if (stat(filepath, &sb) == 0 && S_ISREG(sb.st_mode))
 			return (1);
-		file_error(d, filepath, "is a directory", 126);
+		file_error(filepath, "is a directory", 126);
 		return (0);
 	}
 	else if (errno == 13)
 	{
-		file_error(d, filepath, "Permission denied", 126);
+		file_error(filepath, "Permission denied", 126);
 		return (0);
 	}
 	else
@@ -72,14 +72,14 @@ char	**get_path_arr(t_master *d)
 	return (NULL);
 }
 
-char	*get_prog_path(t_master *d, t_list *lst, char **path_arr)
+char	*get_prog_path(t_list *lst, char **path_arr)
 {
 	char	*add_slash;
 	char	*cmd;
 	char	*fullpath;
 
-	cmd = get_pname(d, lst);
-	if (is_filepath_valid(d, cmd) && (cmd[0] == '/' || cmd[0] == '.'))
+	cmd = get_pname(lst);
+	if (is_filepath_valid(cmd) && (cmd[0] == '/' || cmd[0] == '.'))
 		return (cmd);
 	if (path_arr != NULL)
 	{
@@ -88,7 +88,7 @@ char	*get_prog_path(t_master *d, t_list *lst, char **path_arr)
 			add_slash = ft_strjoin(*path_arr, "/");
 			fullpath = ft_strjoin(add_slash, cmd);
 			free(add_slash);
-			if (is_filepath_valid(d, fullpath))
+			if (is_filepath_valid(fullpath))
 				return (fullpath);
 			path_arr++;
 			free(fullpath);
@@ -98,5 +98,5 @@ char	*get_prog_path(t_master *d, t_list *lst, char **path_arr)
 		ft_printf_fd("minishell: %s: No such file or directory\n", 2, cmd);
 	else
 		ft_printf_fd("minishell: %s: command not found\n", 2, cmd);
-	return (free_master_exit(d, 127), NULL);
+	return (exit(127), NULL);
 }
