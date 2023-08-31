@@ -122,7 +122,7 @@ enum e_g_prog_state
 	process,
 };
 
-//Main
+// Main
 
 void		fatal_error(t_master *d);
 void		file_error(t_master *d, char *path, char *err_str, int code);
@@ -176,32 +176,32 @@ void		check_wrong_chdir(char *path);
 int			out_redirection_check(char *path);
 int			is_export_append(char **key);
 void		update_or_append(t_list *lst, char *key, char *value, int is_append);
+int			is_long_size(char *str);
 
 // TESTING
 void		print_lst(void *nd);
 void		print_str_arr(char **arr);
-int			is_long_size(char *str);
 int			get_long_digits(char *str);
 int			check_limit(char *str);
 char		*get_key(char *arg);
 char		*get_value(char *arg);
 
-//Split env
+// Split env
 char		**ft_split_env(char const *s, char c);
 
-//Env variables minishell
+// Env variables minishell
 t_master	*inicialize_struct(void);
 char		*get_env_variable(char *key, t_master *master);
 void		print_env_list(t_master *master);
 t_list		*inicialize_env(void);
 
-//Free minishell
+// Free minishell
 void		ft_free_env(void *env);
 void		ft_free_env_list(t_master *master);
 void		ft_free_data(void *data);
 void		ft_free_data_list(t_list *parsed_lst);
 
-//Split parser - the first parser for single and double quotes
+// Split parser - the first parser for single and double quotes
 t_split		*ft_split_parser(char *s, t_master *master);
 
 

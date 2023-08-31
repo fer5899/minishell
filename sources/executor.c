@@ -70,7 +70,7 @@ int	executor(t_master *d)
 
 	lst = d->parsed_lst;
 	if (lst == NULL)
-		return (d->exit_code);
+		return (0);
 	get_all_input_heredoc(d);
 	if (g_prog_state == exit_heredoc)
 		return (1);

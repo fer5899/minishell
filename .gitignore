@@ -49,3 +49,5 @@ xcuserdata/
 
 # Test files
 testing
+*.supp
+*.dSYM
