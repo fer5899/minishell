@@ -50,7 +50,7 @@ void	input_heredoc(char *delim, int type, t_master *d)
 	if (!input)
 		return (close(tmp_fd), free(input));
 	if (type == heredoc_)
-		input = expand_env_variables(input, d);
+		input = expand_env_variables_first_pass(input, d);
 	input = add_nl(input);
 	while (ft_strlen(input) - 1 != ft_strlen(delim)
 		|| ft_strncmp(input, delim, ft_strlen(input) - 1) != 0)
@@ -61,7 +61,7 @@ void	input_heredoc(char *delim, int type, t_master *d)
 		if (!input)
 			break ;
 		if (type == heredoc_)
-			input = expand_env_variables(input, d);
+			input = expand_env_variables_first_pass(input, d);
 		input = add_nl(input);
 	}
 	free(input);

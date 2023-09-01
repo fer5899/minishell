@@ -69,7 +69,6 @@ typedef struct s_split_param
 	int		after_sep;
 	int		error;
 	int		join_arg;
-	int		join_arg;
 }				t_split_param;
 
 typedef struct s_split
@@ -77,7 +76,6 @@ typedef struct s_split
 	char	*str;
 	char	char_type;
 	int		error;
-	int		join_arg;
 	int		join_arg;
 }				t_split;
 

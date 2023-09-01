@@ -108,7 +108,7 @@ void	*ft_initialize_parsed_lst_data_2(t_init_list *l, t_split *split, t_master *
 	return ((void *)1);
 }
 
-t_list	*initialize_parsed_lst(t_split *split)
+t_list	*initialize_parsed_lst(t_split *split, t_master *master)
 {
 	t_init_list	*l;
 	t_list		*list;
@@ -231,8 +231,9 @@ int	main(void)
 			ft_parse_input(command, master);
 			// print_parsed_list(master->parsed_lst);
 			add_history(command);
-            // if (master->exit_code != 2)
-			    master->exit_code = executor(master);
+            if (master->exit_code == 2 && !master->parsed_lst)
+                continue ;
+			master->exit_code = executor(master);
 			if (master->parsed_lst)
 				ft_free_data_list(master->parsed_lst);
 			free(command);
