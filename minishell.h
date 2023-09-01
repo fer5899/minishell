@@ -185,6 +185,7 @@ t_split		*ft_split_parser(char *s, t_master *master);
 
 
 // Expand env variables
-char		*expand_env_variables(char *str, t_master *master);
+char		*expand_env_variables_first_pass(char *str, t_master *master);
+char		*expand_env_variables_second_pass(char *str, t_master *master);
 
 #endif
