@@ -61,3 +61,12 @@ void	upd_or_app(t_list *lst, char *key, char *value, int is_append)
 		((t_env *)(lst->content))->value = joined_value;
 	}
 }
+
+void	exit_non_numeric_argument(t_master *d, char *trimmed)
+{
+	ft_printf_fd("minishell: exit: %s: numeric argument required\n",
+		2, d->args[1]);
+	d->exit_code = 255;
+	free(trimmed);
+	free_master_and_exit(d, d->exit_code);
+}

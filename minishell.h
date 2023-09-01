@@ -179,6 +179,7 @@ void		upd_or_app(t_list *lst, char *key, char *value, int is_append);
 void		free_pargs(t_master *d);
 void		free_master_and_exit(t_master *d, int exit_code);
 int			open_tmp_file(t_master *d);
+void		exit_non_numeric_argument(t_master *d, char *trimmed);
 
 // TESTING
 void		print_lst(void *nd);
