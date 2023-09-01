@@ -174,10 +174,11 @@ void		exit_heredoc_after_signal(t_master *d);
 void		check_wrong_chdir(char *path);
 int			out_redirection_check(char *path);
 int			is_export_append(char **key);
-void		update_or_append(t_list *lst, char *key, char *value, int is_append);
 int			is_long_size(char *str);
+void		upd_or_app(t_list *lst, char *key, char *value, int is_append);
 void		free_pargs(t_master *d);
 void		free_master_and_exit(t_master *d, int exit_code);
+int			open_tmp_file(t_master *d);
 
 // TESTING
 void		print_lst(void *nd);

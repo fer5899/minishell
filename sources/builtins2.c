@@ -79,7 +79,7 @@ void	update_env(t_master *d, char *key, char *value, int is_unset)
 				ft_lstdelone(ft_lstpop(&(d->env_lst), lst), free_env);
 			else
 			{
-				update_or_append(lst, key, value, is_append);
+				upd_or_app(lst, key, value, is_append);
 				return ;
 			}
 		}

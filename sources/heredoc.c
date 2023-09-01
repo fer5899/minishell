@@ -45,7 +45,7 @@ void	input_heredoc(char *delim, int type, t_master *d)
 	int		tmp_fd;
 	char	*input;
 
-	tmp_fd = open(get_tmp_path(d), O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	tmp_fd = open_tmp_file(d);
 	input = readline("> ");
 	if (!input)
 		return (close(tmp_fd), free(input));

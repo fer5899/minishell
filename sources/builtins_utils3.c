@@ -43,7 +43,7 @@ int	is_export_append(char **key)
 	return (0);
 }
 
-void	update_or_append(t_list *lst, char *key, char *value, int is_append)
+void	upd_or_app(t_list *lst, char *key, char *value, int is_append)
 {
 	char	*joined_value;
 
