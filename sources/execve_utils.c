@@ -59,7 +59,7 @@ int	is_filepath_valid(char *filepath)
 
 char	**get_path_arr(t_master *d)
 {
-	t_list *env;
+	t_list	*env;
 
 	env = d->env_lst;
 	if (env == NULL)

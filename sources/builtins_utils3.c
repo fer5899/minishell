@@ -13,9 +13,9 @@ void	check_wrong_chdir(char *path)
 	if (access(path, F_OK) == -1)
 		ft_printf_fd("minishell: cd: %s: No such file or directory\n",
 			2, path);
-    else if (stat(path, &path_info) == 0)
+	else if (stat(path, &path_info) == 0)
 	{
-        if (!S_ISDIR(path_info.st_mode))
+		if (!S_ISDIR(path_info.st_mode))
 			ft_printf_fd("minishell: cd: %s: Not a directory\n",
 				2, path);
 	}
