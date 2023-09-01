@@ -68,6 +68,7 @@ typedef struct s_split_param
 	char	sep_type;
 	int		after_sep;
 	int		error;
+	int		join_arg;
 }				t_split_param;
 
 typedef struct s_split
@@ -75,6 +76,7 @@ typedef struct s_split
 	char	*str;
 	char	char_type;
 	int		error;
+	int		join_arg;
 }				t_split;
 
 typedef struct s_split_total
@@ -120,10 +122,10 @@ enum e_g_prog_state
 	process,
 };
 
-//Main
+// Main
 
-void		fatal_error(t_master *d);
-void		file_error(t_master *d, char *path, char *err_str, int code);
+void		fatal_error();
+void		file_error(char *path, char *err_str, int code);
 void		init_pipes(t_master *d);
 int			executor(t_master *d);
 void		heredoc(t_master *d);
@@ -134,9 +136,9 @@ void		find_next_cmd(t_list **lst);
 void		init_pipes(t_master *d);
 void		count_pipes(t_master *d);
 void		get_pargs(t_master *d, t_list *lst);
-char		*get_pname(t_master *d, t_list *lst);
+char		*get_pname(t_list *lst);
 char		**get_path_arr(t_master *d);
-char		*get_prog_path(t_master *d, t_list *lst, char **path_arr);
+char		*get_prog_path(t_list *lst, char **path_arr);
 char		**get_env_arr(t_master *d);
 char		*get_tmp_path(t_master *d);
 void		close_fds(t_master *d);
@@ -162,41 +164,46 @@ void		export_unset(t_master *d, char **args, int is_unset);
 void		export_unset_error(t_master *d, char *arg, int is_unset);
 void		print_sorted_env(t_list *env);
 void		*dup_env_data(void *env_data);
-void		free_master_exit(t_master *d, int exit_code);
-void		in_redirection(char *str, t_master *d);
+void		in_redirection(char *str);
 void		get_echo_arg(char ***args, int *nl);
 void		handle_signals(void);
 char		*add_nl(char *str);
 int			fork_heredoc(char *delim, int type, t_master *d);
 void		run_process(t_master *d, t_list *lst);
 void		exit_heredoc_after_signal(t_master *d);
+void		check_wrong_chdir(char *path);
+int			out_redirection_check(char *path);
+int			is_export_append(char **key);
+void		update_or_append(t_list *lst, char *key, char *value, int is_append);
+int			is_long_size(char *str);
+void		free_pargs(t_master *d);
+void		free_master_and_exit(t_master *d, int exit_code);
 
 // TESTING
 void		print_lst(void *nd);
 void		print_str_arr(char **arr);
-int			is_long_size(char *str);
 int			get_long_digits(char *str);
 int			check_limit(char *str);
 char		*get_key(char *arg);
 char		*get_value(char *arg);
 
-//Split env
+// Split env
 char		**ft_split_env(char const *s, char c);
 
-//Env variables minishell
+// Env variables minishell
 t_master	*inicialize_struct(void);
 char		*get_env_variable(char *key, t_master *master);
 void		print_env_list(t_master *master);
 t_list		*inicialize_env(void);
 
-//Free minishell
+// Free minishell
 void		ft_free_env(void *env);
-void		ft_free_env_list(t_master *master);
+int			ft_free_env_list(t_master *master);
 void		ft_free_data(void *data);
 void		ft_free_data_list(t_list *parsed_lst);
 
-//Split parser - the first parser for single and double quotes
-t_split		*ft_split_parser(char *s);
+// Split parser - the first parser for single and double quotes
+t_split		*ft_split_parser(char *s, t_master *master);
 
 
 // Expand env variables

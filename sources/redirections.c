@@ -5,14 +5,13 @@ void	set_redirection(int type, char *str, t_master *d)
 	int	fd;
 
 	if (type == in_redir_)
-		in_redirection(str, d);
+		in_redirection(str);
 	else if (type == heredoc_ || type == heredoc_q_)
 		heredoc(d);
 	else if (type == out_red_ || type == out_red_app_)
 	{
-		if (access(str, F_OK) == 0)
-			if (access(str, W_OK) == -1)
-				file_error(d, str, "Permission denied", 1);
+		if (!out_redirection_check(str))
+			exit(1);
 		if (type == out_red_)
 			fd = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else

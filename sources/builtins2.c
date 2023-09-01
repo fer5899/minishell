@@ -3,7 +3,7 @@
 void	env_builtin(t_master *d)
 {
 	ft_lstiter(d->env_lst, print_env);
-	free_master_exit(d, 0);
+	exit(0);
 }
 
 void	export_unset(t_master *d, char **args, int is_unset)
@@ -33,6 +33,7 @@ void	export_unset(t_master *d, char **args, int is_unset)
 			args++;
 		}
 	}
+	free_pargs(d);
 }
 
 char	*get_pwd(t_master *d)
@@ -60,8 +61,10 @@ char	*get_pwd(t_master *d)
 void	update_env(t_master *d, char *key, char *value, int is_unset)
 {
 	t_list	*lst;
+	int		is_append;
 
-
+	if (!is_unset)
+		is_append = is_export_append(&key);
 	lst = d->env_lst;
 	while (lst != NULL)
 	{
@@ -71,14 +74,16 @@ void	update_env(t_master *d, char *key, char *value, int is_unset)
 				ft_lstdelone(ft_lstpop(&(d->env_lst), lst), free_env);
 			else
 			{
-				free(key);
-				free(((t_env *)(lst->content))->value);
-				((t_env *)(lst->content))->value = value;
+				update_or_append(lst, key, value, is_append);
 				return ;
 			}
 		}
 		lst = lst->next;
 	}
 	if (!is_unset)
-		ft_lstadd_front(&(d->env_lst), ft_lstnew(init_env_data(key, value)));
+	{
+		t_env *env = init_env_data(key, value);
+		t_list *newnode = ft_lstnew(env);
+		ft_lstadd_front(&(d->env_lst), newnode);
+	}
 }

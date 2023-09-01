@@ -44,9 +44,9 @@ int	ft_type_of_data(char *str, int arg_flag)
 		return (1);
 }
 
-void	*ft_syntax_error(t_init_list *l, t_split *split)
+void	*ft_syntax_error(t_init_list *l, t_split *split, int code)
 {
-	printf("%s\n", "Syntax error PAPA");
+	printf("%s - %d\n", "Syntax error PAPA", code);
 	ft_free_data_list(l->list);
 	while (split->str)
 	{
@@ -70,7 +70,7 @@ void	*ft_initialize_parsed_lst_data_1(t_init_list *l, t_split *split)
 		if ((split + 1)->str == NULL)
 		{
 			free(split->str);
-			return (ft_syntax_error(l, split));
+			return (ft_syntax_error(l, split, 1));
 		}
 		else
 			l->arg_flag = 0;
@@ -94,7 +94,7 @@ void	*ft_initialize_parsed_lst_data_2(t_init_list *l, t_split *split)
 			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 5
 			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 6
 			|| ft_type_of_data((split + l->i + 1)->str, l->arg_flag) == 7)
-			return (ft_syntax_error(l, (split + l->i)));
+			return (ft_syntax_error(l, (split + l->i), 2));
 		else
 		{
 			l->i++ ;
@@ -107,7 +107,7 @@ void	*ft_initialize_parsed_lst_data_2(t_init_list *l, t_split *split)
 	return ((void *)1);
 }
 
-t_list	*initialize_parsed_lst(t_split *split, t_master *master)
+t_list	*initialize_parsed_lst(t_split *split)
 {
 	t_init_list	*l;
 	t_list		*list;
@@ -122,8 +122,8 @@ t_list	*initialize_parsed_lst(t_split *split, t_master *master)
 			return (NULL);
 		if (ft_initialize_parsed_lst_data_2(l, split) == NULL)
 			return (NULL);
-		if (l->data->char_type != '\'')
-			l->data->str = expand_env_variables(l->data->str, master);
+		//if (l->data->char_type != '\'')
+		//	l->data->str = expand_env_variables(l->data->str, master);
 		l->new = ft_lstnew(l->data);
 		ft_lstadd_back(&l->list, l->new);
 		l->i++ ;
@@ -146,11 +146,23 @@ void	ft_free_split_parser(t_split *split)
 	free(split_2);
 }
 
+void	print_split(t_split *split)
+{
+	while (split->str)
+	{
+		if (split->error)
+			printf("error: %d\n", split->error);
+		ft_printf("%s -- %c\n", split->str, split->char_type);
+		split++;
+	}
+}
+
 void	ft_parse_input(char *command, t_master *master)
 {
 	t_split	*split;
 
-	split = ft_split_parser(command);
+	split = ft_split_parser(command, master);
+	//print_split(split);
 	if (split->error == 1)
 	{
 		printf("%s\n", "Syntax error");
@@ -158,8 +170,32 @@ void	ft_parse_input(char *command, t_master *master)
 		master->parsed_lst = NULL;
 		return ;
 	}
-	master->parsed_lst = initialize_parsed_lst(split, master);
+	master->parsed_lst = initialize_parsed_lst(split);
 	free(split);
+}
+
+void	increment_shlvl(t_master *d)
+{
+	char	*shlvl_str;
+	int		prev_shlvl;
+
+	shlvl_str = get_env_variable("SHLVL", d);
+	if (is_long(shlvl_str))
+	{
+		prev_shlvl = ft_atoi(shlvl_str);
+		if (prev_shlvl >= 1000)
+		{
+			ft_printf_fd("%s (%d) too high, resetting to 1\n",
+				2, "minishell: warning: shell level", prev_shlvl + 1);
+			update_env(d, ft_strdup("SHLVL"), ft_strdup("1"), 0);
+		}
+		else if (prev_shlvl < -1)
+			update_env(d, ft_strdup("SHLVL"), ft_strdup("0"), 0);
+		else
+			update_env(d, ft_strdup("SHLVL"), ft_itoa(prev_shlvl + 1), 0);
+	}
+	else
+		update_env(d, ft_strdup("SHLVL"), ft_strdup("1"), 0);
 }
 
 
@@ -167,9 +203,10 @@ int	main(void)
 {
 	t_master	*master;
 	char		*command;
+	int			exit_code;
 
 	master = inicialize_struct();
-	//print_env_list(master);
+	increment_shlvl(master);
 	handle_signals();
 	while (1)
 	{
@@ -180,11 +217,13 @@ int	main(void)
 			if (isatty(STDIN_FILENO))
 				write(2, "exit\n", 5);
 			free(command);
-			ft_free_env_list(master);
-			exit(master->exit_code);
+			exit_code = ft_free_env_list(master);
+			exit(exit_code);
 		}
 		else
 		{
+			if (str_equal(command, ""))
+				continue ;
 			ft_parse_input(command, master);
 			// print_parsed_list(master->parsed_lst);
 			add_history(command);
@@ -194,6 +233,6 @@ int	main(void)
 			free(command);
 		}
 	}
-	ft_free_env_list(master);
-	return (master->exit_code);
+	exit_code = ft_free_env_list(master);
+	return (exit_code);
 }

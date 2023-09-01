@@ -75,7 +75,7 @@ void	get_pargs(t_master *d, t_list *lst)
 		if (((t_data *) lst->content)->type == prog_arg_
 			|| ((t_data *) lst->content)->type == prog_name_)
 		{
-			args[i] = ((t_data *) lst->content)->str;
+			args[i] = ft_strdup(((t_data *) lst->content)->str);
 			i++;
 		}
 		lst = lst->next;

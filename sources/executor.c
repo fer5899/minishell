@@ -45,7 +45,7 @@ int	check_builtin(char *prog_name, t_master *d)
 		if ((str_equal(prog_name, "export") && d->nargs != 1)
 			|| str_equal(prog_name, "unset") || str_equal(prog_name, "cd")
 			|| str_equal(prog_name, "exit"))
-			free_master_exit(d, 0);
+			exit(0);
 		if (str_equal(prog_name, "echo")
 			|| (str_equal(prog_name, "export") && d->nargs == 1)
 			|| str_equal(prog_name, "env") || str_equal(prog_name, "pwd"))
@@ -58,10 +58,10 @@ void	run_process(t_master *d, t_list *lst)
 {
 	set_all_redirections(d, lst);
 	get_pargs(d, lst);
-	check_builtin(get_pname(d, lst), d);
-	execve(get_prog_path(d, lst, get_path_arr(d)),
+	check_builtin(get_pname(lst), d);
+	execve(get_prog_path(lst, get_path_arr(d)),
 		d->args, get_env_arr(d));
-	free_master_exit(d, 1);
+	exit(1);
 }
 
 int	executor(t_master *d)
@@ -70,15 +70,16 @@ int	executor(t_master *d)
 
 	lst = d->parsed_lst;
 	if (lst == NULL)
-		return (d->exit_code);
+		return (0);
 	get_all_input_heredoc(d);
 	if (g_prog_state == exit_heredoc)
 		return (1);
 	d->cmd_idx = -1;
 	count_pipes(d);
 	get_pargs(d, lst);
-	if (check_builtin(get_pname(d, lst), d))
+	if (check_builtin(get_pname(lst), d))
 		return (d->exit_code);
+	free_pargs(d);
 	init_pipes(d);
 	while (lst != NULL)
 	{

@@ -45,16 +45,31 @@ char	*add_nl(char *str)
 	return (str_nl);
 }
 
-void	in_redirection(char *str, t_master *d)
+void	in_redirection(char *str)
 {
 	int	fd;
 
 	if (access(str, F_OK) == -1)
-		file_error(d, str, "No such file or directory", 1);
+		file_error(str, "No such file or directory", 1);
 	else if (access(str, R_OK) == -1)
-		file_error(d, str, "Permission denied", 1);
+		file_error(str, "Permission denied", 1);
 	fd = open(str, O_RDONLY);
 	dup2(fd, 0);
 	close(fd);
+}
+
+int	out_redirection_check(char *path)
+{
+	struct stat	path_info;
+
+	if (stat(path, &path_info) == 0)
+        if (S_ISDIR(path_info.st_mode))
+			return (ft_printf_fd("minishell: %s: Is a directory\n",
+				2, path), 0);
+	if (access(path, F_OK) == 0)
+		if (access(path, W_OK) == -1)
+			return (ft_printf_fd("minishell: %s: Permission denied\n",
+				2, path), 0);
+	return (1);
 }
 

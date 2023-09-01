@@ -10,10 +10,14 @@ void	ft_free_env(void *env)
 	free(tmp);
 }
 
-void	ft_free_env_list(t_master *master)
+int	ft_free_env_list(t_master *master)
 {
-	ft_lstclear(&(master->env_lst), ft_free_env);
+	int	exit_code;
+
+	ft_lstclear(&(master->env_lst), free_env);
+	exit_code = master->exit_code;
 	free(master);
+	return (exit_code);
 }
 
 void	ft_free_data(void *data)

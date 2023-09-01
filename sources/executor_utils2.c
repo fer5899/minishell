@@ -19,7 +19,7 @@ t_env	*init_env_data(char *key, char *value)
 	return (d);
 }
 
-char	*get_pname(t_master *d, t_list *lst)
+char	*get_pname(t_list *lst)
 {
 	char	*prog_name;
 	t_data	*content;
@@ -38,6 +38,6 @@ char	*get_pname(t_master *d, t_list *lst)
 		lst = lst->next;
 	}
 	if (prog_name == NULL)
-		free_master_exit(d, 0);
+		exit(0);
 	return (prog_name);
 }
