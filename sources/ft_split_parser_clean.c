@@ -3,7 +3,7 @@
 
 void	ft_check_for_pipes(t_split_param *sp)
 {
-	if (*(sp->s) == '|')
+	if (*(sp->s) == '|' && !sp->inside_quotes)
 	{
 		if (sp->pipe == 0)
 		{
@@ -21,7 +21,7 @@ void	ft_check_for_pipes(t_split_param *sp)
 
 void	ft_check_for_redirections(t_split_param *sp)
 {
-	if (*(sp->s) == '<')
+	if (*(sp->s) == '<' && !sp->inside_quotes)
 	{
 		if (sp->red_l == 0)
 		{
@@ -35,7 +35,7 @@ void	ft_check_for_redirections(t_split_param *sp)
 	}
 	else
 		sp->red_l = 0;
-	if (*(sp->s) == '>')
+	if (*(sp->s) == '>' && !sp->inside_quotes)
 	{
 		if (sp->red_r == 0)
 		{
@@ -61,23 +61,23 @@ void	normal_character_check(t_split_param *sp)
 	}
 	if ((sp->is_word == 0 && !sp->inside_quotes))
 	{
-		sp->count_2++;
-		sp->is_word = 1;
+            sp->count_2++;
+            sp->is_word = 1;
 	}
 }
-
 static void	word_count_options(t_split_param *sp)
 {
 	ft_check_for_redirections(sp);
 	ft_check_for_pipes(sp);
-	if ((*(sp->s) == '"' || *(sp->s) == '\'') && !sp->inside_quotes)
+	if (((*(sp->s) == '"' && (!*((sp->s) - 1) || *((sp->s) - 1) != '\\'))
+        || *(sp->s) == '\'') && !sp->inside_quotes)
 	{
-		sp->inside_quotes = 1;
-		sp->quote_type = *(sp->s);
-		if (sp->after_sep == 1)
-			sp->after_sep = 0;
-		sp->count_2++;
-		sp->is_word = 1;
+        sp->inside_quotes = 1;
+        sp->quote_type = *(sp->s);
+        if (sp->after_sep == 1)
+            sp->after_sep = 0;
+        sp->count_2++;
+        sp->is_word = 1;
 	}
 	else if (*(sp->s) == sp->quote_type && sp->inside_quotes)
 	{
@@ -106,7 +106,7 @@ static int	word_count(t_split_param *sp)
 	while (*(sp->s))
 	{
 		word_count_options(sp);
-		//printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d - as:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe, sp->after_sep);
+		// printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d - as:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe, sp->after_sep);
 		sp->s++;
 	}
 	if (sp->inside_quotes == 1)
@@ -129,7 +129,7 @@ int	ft_fill_array_lenght(char *s, t_split_param *sp)
 		else
 		{
 			while ((s[length] != ' ' && s[length] != '>' && s[length] != '<' 
-					&& s[length] != '|' && s[length] != '"'
+					&& s[length] != '|' && (s[length] != '"' || s[length - 1] == '\\')
 					&& s[length] != '\'') && s[length])
 				length++;
 		}
@@ -139,6 +139,7 @@ int	ft_fill_array_lenght(char *s, t_split_param *sp)
 		while (s[length + 1] != sp->char_type && s[length])
 			length++;
 	}
+    // ft_printf("str: %s, length: %d, char:%c \n",s, length, sp->char_type);
 	return (length);
 }
 
@@ -159,7 +160,7 @@ int	ft_fill_array_extra(char *s, t_split_param *sp, char *str)
 	else
 	{
 		while ((s[i] != sp->char_type && s[i] != ' ' && s[i] != '>' 
-				&& s[i] != '<' && s[i] != '|' && s[i] != '"' 
+				&& s[i] != '<' && s[i] != '|' && (s[i] != '"' || s[i - 1] == '\\') 
 				&& s[i] != '\'') && s[i])
 		{
 			str[i] = s[i];
@@ -215,9 +216,9 @@ t_split_param	*ft_split_param_initialize(char *s)
 
 void	ft_check_for_separators(t_split_param *sp, char *s)
 {
-	if (*s == '\'' || *s == '"')
+    if (*s == '\'' || (*s == '"' && (!*(s - 1) || *(s - 1) != '\\')))
 	{
-		sp->char_type = *s;
+        sp->char_type = *s;
 		s++;
 	}
 	else
@@ -265,7 +266,7 @@ char	*ft_skip_filled_word(t_split_total *st, char *s)
 		else
 		{
 			while ((*s != ' ' && *s != '<' && *s != '>' 
-					&& *s != '|' && *s != '"' && *s != '\'' ) && *s)
+					&& *s != '|' && (*s != '"' || *(s - 1) == '\\') && *s != '\'' ) && *s)
 				s++;
 		}
 	}
@@ -299,6 +300,7 @@ void	ft_split_all_words(char *s, t_split_total *st)
 		{
 			ft_check_for_separators(st->sp, s);
 			*(st->sp->str_1) = fill_array(s, st->sp);
+            // ft_printf("str_1: %s -- %c -- %d \n", *(st->sp->str_1), st->sp->char_type, st->sp->join_arg);
 			ft_modify_count_and_sp(st);
 			s = ft_skip_filled_word(st, s);
 			st->sp->join_arg = 1;
@@ -311,7 +313,6 @@ int	ft_count_args(t_split *split, int count)
 {
 	while (split->str)
 	{
-		//ft_printf("split->str: %d\n", *(split->str));
 		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
 			&& (split + 1)->join_arg && (split + 1)->join_arg == 1)
 			count--;
@@ -325,7 +326,9 @@ void	aux_join_args(t_split *split, t_split *result, t_master *master)
 	char	*str_free;
 
 	str_free = result->str;
-	(split + 1)->str = expand_env_variables((split + 1)->str, master);
+    if ((split + 1)->char_type == '"')
+	    (split + 1)->str = expand_env_variables_second_pass((split + 1)->str, master);
+    //Aqui falta el caso de $'\n'
 	result->str = ft_strjoin(result->str, (split + 1)->str);
 	free(str_free);
 	free((split + 1)->str);
@@ -340,20 +343,19 @@ void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *ma
 {
 	while (count >= 0 && split->str)
 	{
-		//ft_printf("HOLAAAAA\n");
-		//ft_printf("split->str: %d\n", *(split->str));
 		*result = *split;
-		if (split->char_type != '\'')
-			result->str = expand_env_variables(split->str , master);
+		if (split->char_type == '"')
+			result->str = expand_env_variables_second_pass(split->str , master);
 		if (*split->str != '>' && *split->str != '<' && *split->str != '|'
 			&& (split + 1) && (split + 1)->join_arg == 1)
 		{
-			while ((split + 1) && (split + 1)->join_arg == 1)
+            //ft_printf("entro str: %s -- %d, str+1: %s -- %d \n", split->str, split->join_arg, (split + 1)->str, (split + 1)->join_arg);
+            while ((split + 1) && (split + 1)->join_arg == 1)
 			{
 				aux_join_args(split, result, master);
-				count--;
 				split++;
 			}
+			count--;
 			result++;
 		}
 		else
@@ -363,6 +365,36 @@ void	ft_go_through_args(t_split *split, t_split *result, int count, t_master *ma
 		}
 		split++;
 	}
+}
+void    ft_delete_slashes(t_split *result)
+{
+    char    *str;
+    char    *str_free;
+    int     i;
+    int     j;
+
+    while (result->str)
+    {
+        if (result->char_type == ' ')
+        {
+            str = result->str;
+            i = 0;
+            j = 0;
+            while (str[i])
+            {
+                if (str[i] == '\\' && str[i + 1] == '"')
+                    i++;
+                str[j] = str[i];
+                i++;
+                j++;
+            }
+            str[j] = '\0';
+            str_free = result->str;
+            result->str = ft_strdup(str);
+            free(str_free);
+        }
+        result++;
+    }
 }
 
 t_split *ft_expand_and_join_args(t_split *split, int count, t_master *master)
@@ -380,8 +412,41 @@ t_split *ft_expand_and_join_args(t_split *split, int count, t_master *master)
 		exit (1);
 	result_last = result;
 	ft_go_through_args(split, result, count, master);
+    ft_delete_slashes(result);
 	free(split_free);
 	return (result_last);
+}
+
+void    ft_check_for_errors_in_separators(char *s, t_split_param *sp)
+{
+    sp->inside_quotes = 0;
+    sp->quote_type = '\0';
+    while (*s)
+    {
+        if ((*s == '\"' || *s == '\'') && !sp->inside_quotes)
+        {
+            sp->inside_quotes = 1;
+            sp->quote_type = *s;
+            s++;
+        }
+        else if (*s == sp->quote_type && sp->inside_quotes)
+        {
+            sp->inside_quotes = 0;
+            sp->quote_type = '\0';
+            s++;
+        }
+        else if (*s == '|' && !sp->inside_quotes)
+        {
+            while (*(s + 1) == ' ')
+            {
+                s++;
+                if (*(s + 1) == '|')
+                    sp->error = 1;
+            }
+        }
+        else
+            s++;
+    }
 }
 
 t_split	*ft_split_parser(char *s, t_master *master)
@@ -394,7 +459,7 @@ t_split	*ft_split_parser(char *s, t_master *master)
 	result = st->split;
 	count = st->sp->count_1;
 	//ft_printf("count = %d\n", st->sp->count_1);
-
+    // ft_check_for_errors_in_separators(s, st->sp);
 	ft_split_all_words(s, st);
 	st->split->str = *(st->sp->str_1);
 	if (st->sp->error == 0)
@@ -418,23 +483,24 @@ t_split	*ft_split_parser(char *s, t_master *master)
 
 // 	master = inicialize_struct();
 // 	int i = 0;
-// 	//split = ft_split_parser("hola $USER $caca", master);
-// 	split = ft_split_parser("a$USER cat>ho''la<<  a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
+// 	split = ft_split_parser("$HOLA", master);
+// 	//split = ft_split_parser("a$USER cat>ho''la<<  a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
 // 	//command = readline("here: ");
 // 	//split = ft_split_parser(command, master);
 // 	char *bash[] = {"aalvgomez", "cat", ">" ,"hola", "<<", "aalvgomez", "pe", "|", "ono que mal", "alvgomezpepe", "$USER", "alvgomez", "pepealvgomezalvgomez", "0hola", "hola0hola", "pepe?", "pepealvgomez?", "caca0alvgomez", "caca0a", ">>", "y", "lo", "|", "pete", NULL};
 // 	char *nota;
 // 	split_free = split;
+//     //ft_printf("PID: %d\n", getpid());
 // 	while (split->str)
 // 	{
 // 		if (split->error)
 // 			printf("error: %d\n", split->error);
-// 		if (str_equal(split->str, bash[i]))
-// 			nota = "OK";
-// 		else
-// 			nota = "MAAL";
-// 		printf("%s -- %c -- %s --> %s\n", split->str, split->char_type, bash[i], nota);
-// 		//printf("%s -- %c\n", split->str, split->char_type);
+// 		//if (str_equal(split->str, bash[i]))
+// 		//	nota = "OK";
+// 		//else
+// 		//	nota = "MAAL";
+// 		//printf("%s -- %c -- %s --> %s\n", split->str, split->char_type, bash[i], nota);
+// 		printf("%s -- %c\n", split->str, split->char_type);
 // 		str = split->str;
 // 		free(str);
 // 		split++;

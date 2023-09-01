@@ -69,6 +69,7 @@ typedef struct s_split_param
 	int		after_sep;
 	int		error;
 	int		join_arg;
+	int		join_arg;
 }				t_split_param;
 
 typedef struct s_split
@@ -76,6 +77,7 @@ typedef struct s_split
 	char	*str;
 	char	char_type;
 	int		error;
+	int		join_arg;
 	int		join_arg;
 }				t_split;
 
@@ -202,11 +204,12 @@ int			ft_free_env_list(t_master *master);
 void		ft_free_data(void *data);
 void		ft_free_data_list(t_list *parsed_lst);
 
-// Split parser - the first parser for single and double quotes
+//Split parser - the first parser for single and double quotes
 t_split		*ft_split_parser(char *s, t_master *master);
 
 
 // Expand env variables
-char		*expand_env_variables(char *str, t_master *master);
+char		*expand_env_variables_first_pass(char *str, t_master *master);
+char		*expand_env_variables_second_pass(char *str, t_master *master);
 
 #endif
