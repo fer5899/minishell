@@ -229,7 +229,6 @@ int	main(void)
 			if (str_equal(command, ""))
 				continue ;
 			ft_parse_input(command, master);
-			// print_parsed_list(master->parsed_lst);
 			add_history(command);
             if (master->exit_code == 2 && !master->parsed_lst)
                 continue ;

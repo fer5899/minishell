@@ -37,6 +37,8 @@ int	is_filepath_valid(char *filepath)
 {
 	struct stat	sb;
 
+	if (str_equal(filepath, ""))
+		return (1);
 	if (filepath == NULL)
 		exit(0);
 	if (access(filepath, F_OK | X_OK) == 0)
@@ -81,7 +83,7 @@ char	*get_prog_path(t_list *lst, char **path_arr)
 	cmd = get_pname(lst);
 	if (is_filepath_valid(cmd) && (cmd[0] == '/' || cmd[0] == '.'))
 		return (cmd);
-	if (path_arr != NULL)
+	if (path_arr != NULL && !str_equal(cmd, ""))
 	{
 		while (*path_arr != NULL)
 		{
