@@ -72,19 +72,20 @@ void	exit_builtin(t_master *d)
 	{
 		trimmed = ft_strtrim(d->args[1], " \t\v");
 		if (!is_long(trimmed))
-		{
-			ft_printf_fd("minishell: exit: %s: numeric argument required\n",
-				2, d->args[1]);
-			d->exit_code = 255;
-			free_master_and_exit(d, d->exit_code);
-		}
+			exit_non_numeric_argument(d, trimmed);
 		else if (d->nargs > 2)
 		{
 			ft_printf_fd("minishell: exit: too many arguments\n", 2);
+			free(trimmed);
+			free_pargs(d);
 			d->exit_code = 1;
 		}
 		else
-			free_master_and_exit(d, get_exit_status(trimmed));
+		{
+			d->exit_code = get_exit_status(trimmed);
+			free(trimmed);
+			free_master_and_exit(d, d->exit_code);
+		}
 	}
 	else if (d->nargs == 1)
 		free_master_and_exit(d, d->exit_code);

@@ -63,13 +63,13 @@ int	out_redirection_check(char *path)
 	struct stat	path_info;
 
 	if (stat(path, &path_info) == 0)
-        if (S_ISDIR(path_info.st_mode))
+		if (S_ISDIR(path_info.st_mode))
 			return (ft_printf_fd("minishell: %s: Is a directory\n",
-				2, path), 0);
+					2, path), 0);
 	if (access(path, F_OK) == 0)
 		if (access(path, W_OK) == -1)
 			return (ft_printf_fd("minishell: %s: Permission denied\n",
-				2, path), 0);
+					2, path), 0);
 	return (1);
 }
 

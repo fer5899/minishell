@@ -13,9 +13,9 @@ void	check_wrong_chdir(char *path)
 	if (access(path, F_OK) == -1)
 		ft_printf_fd("minishell: cd: %s: No such file or directory\n",
 			2, path);
-    else if (stat(path, &path_info) == 0)
+	else if (stat(path, &path_info) == 0)
 	{
-        if (!S_ISDIR(path_info.st_mode))
+		if (!S_ISDIR(path_info.st_mode))
 			ft_printf_fd("minishell: cd: %s: Not a directory\n",
 				2, path);
 	}
@@ -43,7 +43,7 @@ int	is_export_append(char **key)
 	return (0);
 }
 
-void	update_or_append(t_list *lst, char *key, char *value, int is_append)
+void	upd_or_app(t_list *lst, char *key, char *value, int is_append)
 {
 	char	*joined_value;
 
@@ -60,4 +60,13 @@ void	update_or_append(t_list *lst, char *key, char *value, int is_append)
 		free(value);
 		((t_env *)(lst->content))->value = joined_value;
 	}
+}
+
+void	exit_non_numeric_argument(t_master *d, char *trimmed)
+{
+	ft_printf_fd("minishell: exit: %s: numeric argument required\n",
+		2, d->args[1]);
+	d->exit_code = 255;
+	free(trimmed);
+	free_master_and_exit(d, d->exit_code);
 }

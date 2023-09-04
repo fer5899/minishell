@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	fatal_error()
+void	fatal_error(void)
 {
 	ft_printf_fd("FATAL ERROR\n", 2);
 	exit(1);

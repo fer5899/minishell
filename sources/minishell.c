@@ -46,8 +46,8 @@ int	ft_type_of_data(char *str, int arg_flag, char char_type)
 
 void	*ft_syntax_error(t_init_list *l, t_split *split, t_master *master)
 {
-    write(2, "syntax error near unexpected token \n", 37);
-    master->exit_code = 2;
+	write(2, "syntax error near unexpected token \n", 37);
+	master->exit_code = 2;
 	ft_free_data_list(l->list);
 	while (split->str)
 	{
@@ -86,7 +86,7 @@ void	*ft_initialize_parsed_lst_data_2(t_init_list *l, t_split *split, t_master *
 	{
 		free((split + l->i)->str);
 		if (l->data->type == 3
-			&& ((split + l->i + 1)->char_type == '\'' 
+			&& ((split + l->i + 1)->char_type == '\''
 				|| (split + l->i + 1)->char_type == '"'))
 			l->data->type = 4;
 		if (((split + l->i) + 1)->str == NULL 
@@ -159,22 +159,20 @@ void	print_split(t_split *split)
 void	ft_parse_input(char *command, t_master *master)
 {
 	t_split	*split;
-    char    *str;
+	char	*str;
 
 	str = expand_env_variables_first_pass(command, master);
-    //ft_printf("str1: %s\n", str);
-    split = ft_split_parser(str, master);
-	//print_split(split);
+	split = ft_split_parser(str, master);
 	if (split->error == 1)
 	{
 		write(2, "syntax error near unexpected token \n", 37);
-        master->exit_code = 2;
+		master->exit_code = 2;
 		ft_free_split_parser(split);
 		master->parsed_lst = NULL;
 		return ;
 	}
 	master->parsed_lst = initialize_parsed_lst(split, master);
-    free(str);
+	free(str);
 	free(split);
 }
 
@@ -229,10 +227,9 @@ int	main(void)
 			if (str_equal(command, ""))
 				continue ;
 			ft_parse_input(command, master);
-			// print_parsed_list(master->parsed_lst);
 			add_history(command);
-            if (master->exit_code == 2 && !master->parsed_lst)
-                continue ;
+			if (master->exit_code == 2 && !master->parsed_lst)
+				continue ;
 			master->exit_code = executor(master);
 			if (master->parsed_lst)
 				ft_free_data_list(master->parsed_lst);
