@@ -41,11 +41,6 @@ void	ft_get_key_2(t_exp_env *ex, char *str)
 		ex->key = ft_substr(str, ex->i + 1, 1);
 		ex->j++;
 	}
-	//else if (str[ex->i + 1] && str[ex->i + 1] == '~') //mirar si es necesario
-	//{
-	//	ex->key = ft_substr(str, ex->i + 1, 1);
-	//	ex->j++;
-	//}
 	else if ((str[ex->i + 1] && (str[ex->i + 1] == ' ' || str[ex->i + 1] == '/'
 				|| str[ex->i + 1] == '\'' || str[ex->i + 1] == '|'
 				|| str[ex->i + 1] == '>' || str[ex->i + 1] == '<'))
@@ -96,16 +91,3 @@ char	*expand_env_variables_second_pass(char *str, t_master *master)
 	free(str);
 	return (result);
 }
-
-
-// int main(void)
-// {
-// 	char	*str;
-// 	t_master	*master;
-
-// 	master = inicialize_struct();
-// 	str = expand_env_variables_second_pass("a$USER cat>ho''la<< Ñ¡ $~ $hi~ a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
-// 	ft_printf("str: %s\n", str);
-// 	free(str);
-// 	ft_free_env_list(master);
-// }

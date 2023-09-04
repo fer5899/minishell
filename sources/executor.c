@@ -8,7 +8,7 @@ void	launch_fork(t_master *d, t_list *lst)
 	g_prog_state = process;
 	d->pids[d->cmd_idx] = fork();
 	if (d->pids[d->cmd_idx] == -1)
-		fatal_error(d);
+		fatal_error();
 	if (d->pids[d->cmd_idx] == 0)
 		run_process(d, lst);
 }

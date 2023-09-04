@@ -35,11 +35,11 @@ void	init_pipes(t_master *d)
 
 	i = 0;
 	if (d->n_pipes > MAX_PIPES)
-		fatal_error(d);
+		fatal_error();
 	while (i < d->n_pipes)
 	{
 		if (pipe(d->fds[i]) == -1)
-			fatal_error(d);
+			fatal_error();
 		i++;
 	}
 }
@@ -68,7 +68,7 @@ void	get_pargs(t_master *d, t_list *lst)
 	d->nargs = count_args(lst);
 	args = (char **) ft_calloc(d->nargs + 1, sizeof(char *));
 	if (!args)
-		fatal_error(d);
+		fatal_error();
 	i = 0;
 	while (i < d->nargs && lst != NULL)
 	{

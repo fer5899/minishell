@@ -81,17 +81,3 @@ char	**ft_split_env(char const *s, char c)
 	str[i] = 0;
 	return (str);
 }
-
-/*int main(void)
-{
-	char **str;
-	int i;
-	
-	i = 0;
-	str = ft_split_two("=", '=');
-	while (str[i])
-	{
-		printf("%s\n", str[i]);
-		i++;
-	}
-}*/

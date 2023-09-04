@@ -41,7 +41,7 @@ void	export_unset(t_master *d, char **args, int is_unset)
 	free_pargs(d);
 }
 
-char	*get_pwd(t_master *d)
+char	*get_pwd()
 {
 	char	*buf;
 	int		buf_size;	
@@ -49,16 +49,16 @@ char	*get_pwd(t_master *d)
 	buf_size = 100;
 	buf = (char *) ft_calloc(buf_size, sizeof(char));
 	if (!buf)
-		fatal_error(d);
+		fatal_error();
 	while (!getcwd(buf, buf_size))
 	{
 		free(buf);
 		buf_size += 100;
 		if (buf_size > 2147483500)
-			fatal_error(d);
+			fatal_error();
 		buf = (char *) ft_calloc(buf_size, sizeof(char));
 		if (!buf)
-			fatal_error(d);
+			fatal_error();
 	}
 	return (buf);
 }
