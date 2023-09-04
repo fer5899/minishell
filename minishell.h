@@ -95,6 +95,19 @@ typedef struct s_init_list
 	int		i;
 }				t_init_list;
 
+typedef struct s_exp_env
+{
+	int		i;
+	int		j;
+	char	*key;
+	int		inside_single_quotes;
+	int		inside_double_quotes;
+	char	*tmp;
+	char	*new;
+	char	*new_free;
+	char	*env;
+}				t_exp_env;
+
 enum e_prs_type
 {
 	prog_name_,
@@ -211,5 +224,6 @@ t_split		*ft_split_parser(char *s, t_master *master);
 // Expand env variables
 char		*expand_env_variables_first_pass(char *str, t_master *master);
 char		*expand_env_variables_second_pass(char *str, t_master *master);
+t_exp_env	*inicialize_env_struct(void);
 
 #endif

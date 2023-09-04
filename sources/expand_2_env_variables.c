@@ -6,12 +6,12 @@ char	*substitude_env_variable_2(char *key, t_master *master)
 	t_env	*env;
 
 	list = master->env_lst;
-    if (str_equal(key, "?"))
-        return(ft_itoa(master->exit_code));
-    else if (str_equal(key, "$"))
-        return (ft_strdup("$$"));
-    else if (key == NULL)
-        return (ft_strdup("$"));
+	if (str_equal(key, "?"))
+		return (ft_itoa(master->exit_code));
+	else if (str_equal(key, "$"))
+		return (ft_strdup("$$"));
+	else if (key == NULL)
+		return (ft_strdup("$"));
 	while (list)
 	{
 		env = (t_env *)list->content;
@@ -22,86 +22,90 @@ char	*substitude_env_variable_2(char *key, t_master *master)
 	return (NULL);
 }
 
+void	ft_get_key_2(t_exp_env *ex, char *str)
+{
+	while (str[ex->i + ex->j + 1] && str[ex->i + ex->j + 1] != ' '
+		&& str[ex->i + ex->j + 1] != '\'' && str[ex->i + ex->j + 1] != '"'
+		&& str[ex->i + ex->j + 1] != '$' && str[ex->i + ex->j + 1] != '?'
+		&& str[ex->i + ex->j + 1] != '~' && str[ex->i + ex->j + 1] != '/'
+		&& str[ex->i + ex->j + 1] != '|' && str[ex->i + ex->j + 1] != '>'
+		&& str[ex->i + ex->j + 1] != '<')
+		ex->j++;
+	if (str[ex->i + 1] && str[ex->i + 1] == '?')
+	{
+		ex->key = ft_substr(str, ex->i + 1, 1);
+		ex->j++;
+	}
+	else if (str[ex->i + 1] && str[ex->i + 1] == '$')
+	{
+		ex->key = ft_substr(str, ex->i + 1, 1);
+		ex->j++;
+	}
+	//else if (str[ex->i + 1] && str[ex->i + 1] == '~') //mirar si es necesario
+	//{
+	//	ex->key = ft_substr(str, ex->i + 1, 1);
+	//	ex->j++;
+	//}
+	else if ((str[ex->i + 1] && (str[ex->i + 1] == ' ' || str[ex->i + 1] == '/'
+				|| str[ex->i + 1] == '\'' || str[ex->i + 1] == '|'
+				|| str[ex->i + 1] == '>' || str[ex->i + 1] == '<'))
+		|| !str[ex->i + 1])
+		ex->key = NULL;
+	else
+		ex->key = ft_substr(str, ex->i + 1, ex->j);
+}
+
+void	ft_dollar_case_2(t_exp_env *ex, char *str, t_master *master)
+{
+	ex->j = 0;
+	ft_get_key_2(ex, str);
+	ex->env = substitude_env_variable_2(ex->key, master);
+	if (ex->env)
+	{
+		ex->new_free = ex->new;
+		ex->new = ft_strjoin(ex->new, ex->env);
+		free(ex->new_free);
+		free(ex->env);
+	}
+	free(ex->key);
+	ex->i += ex->j;
+}
+
 char	*expand_env_variables_second_pass(char *str, t_master *master)
 {
-	int		i;
-	int		j;
-	char	*key;
-    char    *tmp;
-    char    *new;
-    char    *new_free;
-    char    *env;
+	t_exp_env	*ex;
+	char		*result;
 
-    i = 0;
-    //ft_printf("str: %s\n", str);
-    new = ft_strdup("");
-    env = NULL;
-	while (str[i])
+	ex = inicialize_env_struct();
+	while (str[ex->i])
 	{
-        if (str[i] == '$')
+		if (str[ex->i] == '$')
+			ft_dollar_case_2(ex, str, master);
+		else
 		{
-            j = 0;
-            while (str[i + j + 1] && str[i + j + 1] != ' '
-				&& str[i + j + 1] != '\'' && str[i + j + 1] != '"'
-				&& str[i + j + 1] != '$' && str[i + j + 1] != '?'
-                && str[i + j + 1] != '~' && str[i + j + 1] != '/'
-                && str[i + j + 1] != '|' && str[i + j + 1] != '>'
-                && str[i + j + 1] != '<')
-				j++;
-			if (str[i + 1] && str[i + 1] == '?')
-            {
-				key = ft_substr(str, i + 1, 1);
-                j++;
-            }
-            else if (str[i + 1] && str[i + 1] == '$')
-            {
-                key = ft_substr(str, i + 1, 1);
-                j++;
-            }
-            if (str[i + 1] && str[i + 1] == '~')
-            {
-				key = ft_substr(str, i + 1, 1);
-                j++;
-            }
-            else if ((str[i + 1] && (str[i + 1] == ' ' || str[i + 1] == '/' || str[i + 1] == '\'' || str[i + 1] == '|' || str[i + 1] == '>' || str[i + 1] == '<')) || !str[i + 1])
-                key = NULL;
-			else
-				key = ft_substr(str, i + 1, j);
-			env = substitude_env_variable_2(key, master);
-            if (env)
-            {
-                new_free = new;
-                new = ft_strjoin(new, env);
-                free(new_free);
-                free(env);
-                
-            }
-            free(key);
-            i += j;
+			ex->tmp = ft_substr(str, ex->i, 1);
+			ex->new_free = ex->new;
+			ex->new = ft_strjoin(ex->new, ex->tmp);
+			free(ex->new_free);
+			free(ex->tmp);
 		}
-        else
-        {
-            tmp = ft_substr(str, i, 1);
-            new_free = new;
-            new = ft_strjoin(new, tmp);
-            free(new_free);
-            free(tmp);
-        }
-		i++;
+		ex->i++;
 	}
-	return (new);
+	result = ex->new;
+	free(ex);
+	free(str);
+	return (result);
 }
 
 
 // int main(void)
-// 
+// {
 // 	char	*str;
 // 	t_master	*master;
 
 // 	master = inicialize_struct();
-// 	str = expand_env_variables_second_pass("$'\n'", master);
-//     ft_printf("str: %s\n", str);
-//     free(str);
-//     atexit(leaks);
-//     ft_free_env_list(master);
+// 	str = expand_env_variables_second_pass("a$USER cat>ho''la<< Ñ¡ $~ $hi~ a$USER pe| o'no que mal' \"$USER\"pepe '$USER' $USER$USERa pepe$USERa$USER$USERa$USER $?hola hola$?hola pepe$USERa? pepe$USER? caca$?$USER caca$?a >> y lo |'pe'te", master);
+// 	ft_printf("str: %s\n", str);
+// 	free(str);
+// 	ft_free_env_list(master);
 // }

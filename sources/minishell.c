@@ -167,6 +167,7 @@ void	ft_parse_input(char *command, t_master *master)
 	{
 		write(2, "syntax error near unexpected token \n", 37);
 		master->exit_code = 2;
+		free(str);
 		ft_free_split_parser(split);
 		master->parsed_lst = NULL;
 		return ;
