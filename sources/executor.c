@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:41:29 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 12:24:29 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 extern int	g_prog_state;
@@ -28,7 +40,7 @@ void	exec_builtin(char *prog_name, t_master *d)
 	else if (str_equal(prog_name, "env"))
 		env_builtin(d);
 	else if (str_equal(prog_name, "pwd"))
-		pwd(d);
+		pwd();
 }
 
 int	check_builtin(char *prog_name, t_master *d)
@@ -89,4 +101,3 @@ int	executor(t_master *d)
 	close_fds(d);
 	return (catch_exit_code(d));
 }
-

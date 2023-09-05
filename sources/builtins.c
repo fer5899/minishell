@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:40:31 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 11:56:31 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void	pwd(t_master *d)
+void	pwd(void)
 {
 	char	*pwd_str;
 
-	pwd_str = get_pwd(d);
+	pwd_str = get_pwd();
 	ft_printf("%s\n", pwd_str);
 	free(pwd_str);
 	exit(0);
@@ -40,7 +52,7 @@ void	cd(t_master *d)
 	char	*old_pwd;
 	char	*home;
 
-	old_pwd = get_pwd(d);
+	old_pwd = get_pwd();
 	if (d->nargs < 2)
 	{
 		home = get_env_variable("HOME", d);
@@ -59,7 +71,7 @@ void	cd(t_master *d)
 	{
 		d->exit_code = 0;
 		update_env(d, ft_strdup("OLDPWD"), old_pwd, 0);
-		update_env(d, ft_strdup("PWD"), get_pwd(d), 0);
+		update_env(d, ft_strdup("PWD"), get_pwd(), 0);
 	}
 	free_pargs(d);
 }
@@ -90,5 +102,3 @@ void	exit_builtin(t_master *d)
 	else if (d->nargs == 1)
 		free_master_and_exit(d, d->exit_code);
 }
-
-

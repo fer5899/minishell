@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   inicialize_parsed_list.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:42:31 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 12:03:23 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	ft_type_of_data(char *str, int arg_flag, char char_type)
@@ -36,7 +48,7 @@ void	*ft_initialize_parsed_lst_data_1(t_init_list *l,
 		l->arg_flag = 1;
 	else if (l->data->type == 7)
 	{
-		if ((split + 1)->str == NULL || !(split - 1)->str
+		if ((split + 1)->str == NULL || l->i == 0
 			|| *(split + 1)->str == '|')
 		{
 			free(split->str);

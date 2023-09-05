@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   long_long_parse.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:42:42 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 11:42:44 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	get_long_digits(char *str)
@@ -107,7 +119,6 @@ int	get_exit_status(char *str)
 		num = num * 10 + (*str - 48);
 		str++;
 	}
-	free(orig);
 	if (sign == 1)
 		return (num % 256);
 	else

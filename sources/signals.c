@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:43:17 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 11:49:14 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 extern int	g_prog_state;
@@ -44,4 +56,3 @@ void	handle_signals(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &tty_data);
 	signal(SIGINT, sigint_handler);
 }
-

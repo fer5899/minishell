@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins2.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:40:38 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 11:53:15 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	env_builtin(t_master *d)
@@ -41,7 +53,7 @@ void	export_unset(t_master *d, char **args, int is_unset)
 	free_pargs(d);
 }
 
-char	*get_pwd()
+char	*get_pwd(void)
 {
 	char	*buf;
 	int		buf_size;	

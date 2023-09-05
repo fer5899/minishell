@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_parser_main.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 12:31:08 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 12:31:10 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -14,7 +25,6 @@ int	word_count(t_split_param *sp)
 	while (*(sp->s))
 	{
 		word_count_options(sp);
-		// printf("%c --> c:%d - iq:%d - iw:%d - qt:%c - rl:%d - rf:%d - p:%d - as:%d\n",*(sp->s), sp->count_2, sp->inside_quotes, sp->is_word, sp->quote_type, sp->red_l, sp->red_r, sp->pipe, sp->after_sep);
 		sp->s++;
 	}
 	if (sp->inside_quotes == 1)

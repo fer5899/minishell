@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/05 11:48:23 by alvgomez          #+#    #+#             */
+/*   Updated: 2023/09/05 11:59:11 by alvgomez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -157,10 +168,10 @@ void			close_fds(t_master *d);
 void			input_heredoc(char *delim, int type, t_master *d);
 void			get_all_input_heredoc(t_master *d);
 int				catch_exit_code(t_master *d);
-void			pwd(t_master *d);
+void			pwd(void);
 void			echo(t_master *d, char **args);
 void			print_env(void *nd);
-char			*get_pwd(t_master *d);
+char			*get_pwd(void);
 void			cd(t_master *d);
 int				is_long(char *str);
 int				get_exit_status(char *str);
@@ -235,10 +246,9 @@ void			ft_free_split_parser(t_split *split);
 // Inicialize parsed list
 t_list			*initialize_parsed_lst(t_split *split, t_master *master);
 
-
 //Split parser - the first parser for single and double quotes
 t_split			*ft_split_parser(char *s, t_master *master);
-int				word_count	(t_split_param *sp);
+int				word_count(t_split_param *sp);
 
 // Split parser wordcount
 void			word_count_options(t_split_param *sp);
