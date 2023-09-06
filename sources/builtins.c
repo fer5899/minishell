@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:40:31 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/05 11:56:31 by alvgomez         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:46:24 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	exit_builtin(t_master *d)
 {
 	char	*trimmed;
 
+	ft_printf_fd("exit\n", 2);
 	if (d->nargs > 1)
 	{
 		trimmed = ft_strtrim(d->args[1], " \t\v");
