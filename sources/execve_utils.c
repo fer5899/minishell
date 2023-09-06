@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:41:36 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/05 11:41:38 by alvgomez         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:55:32 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	*get_prog_path(t_list *lst, char **path_arr)
 			free(fullpath);
 		}
 	}
-	if (ft_strchr(cmd, '/'))
+	if (!path_arr || ft_strchr(cmd, '/'))
 		ft_printf_fd("minishell: %s: No such file or directory\n", 2, cmd);
 	else
 		ft_printf_fd("minishell: %s: command not found\n", 2, cmd);
