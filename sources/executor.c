@@ -6,7 +6,7 @@
 /*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:41:29 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/06 15:37:52 by fgomez-d         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:42:44 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	exec_builtin(char *prog_name, t_master *d)
 	if (str_equal(prog_name, "export"))
 		export_unset(d, d->args, 0);
 	else if (str_equal(prog_name, "unset"))
-		export_unset(d, d->args, 0);
+		export_unset(d, d->args, 1);
 	else if (str_equal(prog_name, "cd"))
 		cd(d);
 	else if (str_equal(prog_name, "exit"))
