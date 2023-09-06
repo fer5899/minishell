@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:48:23 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/05 11:59:11 by alvgomez         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:37:37 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ enum e_g_prog_state
 	in_heredoc_process,
 	exit_heredoc,
 	process,
+	quit_process,
 };
 
 // Main

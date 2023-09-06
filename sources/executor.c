@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:41:29 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/05 12:24:29 by alvgomez         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:37:52 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,8 @@ int	executor(t_master *d)
 		find_next_cmd(&lst);
 	}
 	close_fds(d);
-	return (catch_exit_code(d));
+	d->exit_code = catch_exit_code(d);
+	if (g_prog_state == quit_process)
+		d->exit_code = 131;
+	return (d->exit_code);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:43:17 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/05 11:49:14 by alvgomez         ###   ########.fr       */
+/*   Updated: 2023/09/06 15:38:39 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,20 @@ void	sigint_handler(int sig)
 	}
 }
 
+void	sigquit_handler(int sig)
+{
+	if (sig == SIGQUIT)
+	{
+		if (g_prog_state == process)
+		{
+			ft_printf("^\\Quit: 3\n");
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			g_prog_state = quit_process;
+		}
+	}
+}
+
 void	handle_signals(void)
 {
 	struct termios	tty_data;
@@ -55,4 +69,5 @@ void	handle_signals(void)
 	tty_data.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &tty_data);
 	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigquit_handler);
 }
