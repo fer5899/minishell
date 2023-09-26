@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alvgomez <alvgomez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fgomez-d <fgomez-d@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:40:38 by alvgomez          #+#    #+#             */
-/*   Updated: 2023/09/05 11:53:15 by alvgomez         ###   ########.fr       */
+/*   Updated: 2023/09/26 16:45:58 by fgomez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,9 @@ void	update_env(t_master *d, char *key, char *value, int is_unset)
 		if (str_equal(((t_env *)(lst->content))->key, key))
 		{
 			if (is_unset)
+			{
 				ft_lstdelone(ft_lstpop(&(d->env_lst), lst), free_env);
+			}
 			else
 			{
 				upd_or_app(lst, key, value, is_append);
